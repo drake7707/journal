@@ -29,3 +29,5 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: drake7707/journal
         tags: latest
+
+
