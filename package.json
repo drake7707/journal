@@ -1,0 +1,19 @@
+{
+  "name": "journal",
+  "version": "1.0.0",
+  "description": "Small journal application",
+  "dependencies": {
+    "@types/jquery": "latest"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drake7707/journal.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/drake7707/journal/issues"
+  },
+  "homepage": "https://github.com/drake7707/journal#readme"
+}
