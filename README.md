@@ -1,0 +1,2 @@
+# journal
+Small journal application
