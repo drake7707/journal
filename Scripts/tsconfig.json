@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "../wwwroot/js/",
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": false,
+    "target": "es5",
+    "lib": [ "DOM", "ES2015"]
+  },
+  "exclude": [
+    "node_modules",
+    "wwwroot"
+  ]
+}

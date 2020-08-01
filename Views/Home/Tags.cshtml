@@ -1,0 +1,29 @@
+﻿@model List<Journal.Domain.DALManager.TagResult>
+
+@{
+    ViewData["Title"] = "Tags";
+}
+
+
+<section class="section" style="padding-top:1em">
+    <div class="container is-fluid has-text-centered">
+        <div class="columns is-centered">
+            <div class="column">
+                <div class="field is-grouped is-grouped-multiline">
+
+                    @foreach (var tag in Model)
+                    {
+                        <div class="control">
+                            <div class="tags are-medium has-addons">
+                                <a class="tag is-light" href="@Url.Action("tag", "home", new { tag = tag.Tag })">@tag.Tag</a>
+                                <span class="tag is-dark">@tag.Freq</span>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

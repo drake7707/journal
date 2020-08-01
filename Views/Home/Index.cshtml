@@ -1,0 +1,111 @@
+﻿@model JournalModel
+@{
+    ViewData["Title"] = "";
+}
+
+@section Nav {
+
+    <p class="level-item level-right" id="pnlRight" style="width:130px">
+        <a class="navbar-item" id="pnlUnsaved" style="display:none">
+            <span class="icon">
+                <i class="fas fa-warning"></i>
+            </span>
+            <span>Unsaved changes</span>
+        </a>
+        <a class="navbar-item" id="pnlSaved" style="display:none">
+            <span class="icon">
+                <i class="fas fa-check"></i>
+            </span>
+            <span>Saved</span>
+        </a>
+    </p>
+
+}
+
+<style>
+
+    .date-item.is-highlighted {
+        background-color: hsl(48, 100%, 67%) !important;
+    }
+
+    .columns {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+    }
+
+    #editorContainer > * {
+        background-color: #fafafa;
+        border: 1px solid #DDD;
+    }
+
+    .is-error {
+        background-color: #f14668 !important;
+    }
+</style>
+
+<section class="section" style="padding-top:1em">
+    <div class="container is-fluid">
+
+        <div class="columns is-desktop is-multiline">
+            <div class="column is-narrow">
+                <div class="field">
+                    <input id="cal" type="date" />
+                </div>
+
+                <div class="field has-text-centered">
+                    <label class="label">Mood</label>
+                    <div class="control">
+                        <label class="radio">
+                            <input type="radio" name="optMood" value="2"> Joyous
+                        </label>
+                        <br />
+                        <label class="radio">
+                            <input type="radio" name="optMood" value="1"> Happy
+                        </label>
+                        <br />
+                        <label class="radio">
+                            <input type="radio" name="optMood" value="0"> Neutral
+                        </label>
+                        <br />
+                        <label class="radio">
+                            <input type="radio" name="optMood" value="-1"> Unhappy
+                        </label>
+                        <br />
+                        <label class="radio">
+                            <input type="radio" name="optMood" value="-2"> Terrible
+                        </label>
+                    </div>
+                </div>
+
+                <div class="field has-text-centered">
+                    <label class="label">Tags</label>
+                    <div class="control">
+                        <style>
+                            .tags-input {
+                                width: 320px;
+                            }
+                        </style>
+                        <input type="tags" id="tags" value="" />
+                    </div>
+                </div>
+
+            </div>
+            <div class="column" id="editorContainer" style="height:calc(100vh - 100px);">
+                <div id="editor" style="width:100%;height:100%"></div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+@section Scripts {
+
+    <script>
+    var highlightedDates = [
+        @Html.Raw(string.Join("," , Model.AvailableDates.Select(d => $@"""{d}""")))
+    ];
+    </script>
+    <script src="js/home.js"></script>
+}

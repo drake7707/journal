@@ -1,0 +1,30 @@
+﻿@model List<Journal.Domain.DayEntry>
+
+<section class="section" style="padding-top:1em">
+    <div class="container is-fluid has-text-centered">
+
+        <div class="columns">
+            <div class="column">
+                @foreach (var entry in Model)
+                {
+                    <div class="box">
+                        <article class="media">
+                            <div class="media-left">
+                            </div>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <a _target="blank" href="./?date=@entry.Day">
+                                            <strong>@entry.Day</strong>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+

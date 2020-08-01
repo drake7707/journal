@@ -1,0 +1,171 @@
+﻿
+@{
+    ViewData["Title"] = "Photo";
+}
+
+
+<section class="section" style="padding-top:1em">
+    <div class="container is-fluid has-text-centered">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <div class="field">
+                    <div class="file is-centered">
+                        <label class="file-label">
+                            <input id="file" class="file-input" type="file" accept="image/*;capture=camera" />
+                            <span class="file-cta">
+                                <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label">
+                                    Choose a file or take a picture
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <canvas id="c" style="max-width: 500px; max-height: 500px;">
+                    </canvas>
+                </div>
+
+                <div class="field has-text-centered">
+                    <label class="label">Size</label>
+                    <div class="control">
+                        <label class="radio">
+                            <input type="radio" name="optSize" value="small"> Small (500px)
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="optSize" value="medium" checked="checked"> Medium (1000px)
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="optSize" value="large"> Large (2000px)
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="optSize" value="raw"> Raw (source)
+                        </label>
+                    </div>
+                </div>
+                <div class="field">
+                    <button id="btnUpload" class="button is-primary">Send photo to open journal</button>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+
+@section Scripts
+{
+
+    <script>
+
+
+        
+        $(document).ready(function () {
+
+            $("#file").change(function (ev) {
+
+                var file = $("#file").get(0).files[0];
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var dataURL = e.target.result;
+
+                    var c = document.getElementById("c");
+                    var ctx = c.getContext('2d');
+
+                    var img = new Image();
+                    img.onload = function () {
+                        c.width = img.width;
+                        c.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+                    };
+                    img.src = dataURL;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            function resizeIfNeeded() {
+                var inputCanvas = document.getElementById("c");
+
+                var targetSize = $("input[name=optSize]:checked").val();
+
+                var resizeImageIfTooLarge = targetSize !== "raw";
+                var targetSizeValue = 1000;
+                if (targetSize == "small")
+                    targetSizeValue = 500;
+                else if (targetSize == "medium")
+                    targetSizeValue = 1000;
+                else if (targetSize == "large")
+                    targetSizeValue = 2000;
+
+                var resizeImageWidth = targetSizeValue;
+                var resizeImageHeight = targetSizeValue;
+
+                if (resizeImageIfTooLarge && (inputCanvas.width > resizeImageWidth || inputCanvas.height > resizeImageHeight)) {
+                    let width = inputCanvas.width;
+                    let height = inputCanvas.height;
+                    if (width > resizeImageWidth) {
+                        const newWidth = resizeImageWidth;
+                        const newHeight = inputCanvas.height / inputCanvas.width * resizeImageWidth;
+                        width = newWidth;
+                        height = newHeight;
+                    }
+                    if (height > resizeImageHeight) {
+                        const newHeight = resizeImageHeight;
+                        const newWidth = width / height * newHeight;
+                        width = newWidth;
+                        height = newHeight;
+                    }
+
+                    var tempCanvas = document.createElement("canvas");
+                    tempCanvas.width = width;
+                    tempCanvas.height = height;
+                    
+                    var ctx = tempCanvas.getContext("2d");
+                    ctx.imageSmoothingQuality = "high";
+                    ctx.drawImage(inputCanvas, 0, 0, width, height);
+
+                    return tempCanvas;
+                } else {
+                    return inputCanvas;
+                }
+            }
+
+            $("#btnUpload").click(function () {
+
+                var resultCanvas = resizeIfNeeded();
+
+                var dataUrl = resultCanvas.toDataURL("image/jpeg");
+                var req = {
+                    photo: `<img src='${dataUrl}'></img>`
+                };
+                $.ajax("api/photo", {
+                    cache: false,
+                    method: "POST",
+                    data: JSON.stringify(req),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        if (data == null || typeof (data) === "undefined")
+                            alert("No content");
+
+                        if (data.success) {
+                            alert("OK!");
+                        }
+                        else
+                            alert("Error: " + data.message)
+                    },
+                    error: function (e) {
+                        alert("Error: " + e.statusText + " - " + e.responseText);
+                    }
+                });
+
+
+            });
+        });
+
+    </script>
+}

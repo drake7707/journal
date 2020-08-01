@@ -1,0 +1,101 @@
+﻿@model List<Journal.Domain.DayEntry>
+
+@{
+    ViewData["Title"] = "Mood";
+}
+
+
+
+
+<section class="section" style="padding-top:1em">
+    <div class="container is-fluid has-text-centered">
+        <div class="columns is-centered">
+            <div class="column">
+
+                <figure class="highcharts-figure">
+                    <div id="container"></div>
+                </figure>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+@section Scripts {
+
+    <script src="js/lib/highcharts.js"></script>
+
+    <script>
+
+    var dates = [ @Html.Raw(string.Join(",", Model.OrderBy(d => d.Day).Select(d => $@"[ new Date(""{d.Day}"").getTime(), {(int)d.Mood} ]"))) ];
+    Highcharts.chart('container', {
+        chart: {
+            type: 'line',
+            zoomType: 'x'
+        },
+        title: {
+            text: null
+        },
+        subtitle: {
+            text: null
+        },
+        credits: {
+            enabled: false
+        },
+        legend: {
+            enabled: false
+        },
+        xAxis: {
+            type: 'datetime',
+            title: {
+                text: 'Date'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Mood'
+            },
+            min: -2,
+            max:2
+        },
+        tooltip: {
+            headerFormat: '<b>{series.name}</b><br>',
+            pointFormat: '{point.x:%e. %b %Y}: {point.y:.2f}'
+        },
+
+        plotOptions: {
+            series: {
+                marker: {
+                    enabled: true
+                }
+            }
+        },
+
+        colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
+        series: [{
+            name: "Mood",
+            data: dates
+        }],
+
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    plotOptions: {
+                        series: {
+                            marker: {
+                                radius: 2.5
+                            }
+                        }
+                    }
+                }
+            }]
+        }
+    });
+    </script>
+
+}

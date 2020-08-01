@@ -1,0 +1,144 @@
+﻿
+@{
+    ViewData["Title"] = "Search";
+}
+
+
+<section class="section" style="padding-top:1em">
+    <div class="container is-fluid has-text-centered">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <div class="field">
+                    <div class="field has-addons">
+                        <div class="control is-expanded">
+                            <input id="txtKeywords" class="input" type="text" placeholder="Search in journal">
+                        </div>
+                        <div class="control">
+                            <a class="button is-primary" id="btnSearch">
+                                Search
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column" id="resultsContainer">
+                @*<div class="box">
+                    <article class="media">
+                        <div class="media-left">
+                        </div>
+                        <div class="media-content">
+                            <div class="content">
+                                <p>
+                                    <a _target="blank" href="">
+                                        <strong>2020-07-19</strong>
+                                    </a>
+                                    <br>
+                                    ...I bought a new <b>plant</b> in colruyt yesterday that I liked the look of, put it on the windowsill where...
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+@section Scripts
+{
+
+    <script>
+
+
+
+        $(document).ready(function () {
+
+
+            $("#txtKeywords").keyup(function (event) {
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    // Cancel the default action, if needed
+                    event.preventDefault();
+                    // Trigger the button element with a click
+                    $("#btnSearch").click();
+                }
+            });
+        
+
+            $("#btnSearch").click(function () {
+                if ($("#txtKeywords").val().length <= 0)
+                    return;
+
+                $("#btnSearch").addClass("is-loading");
+                var req = {
+                    keywords: $("#txtKeywords").val(),
+                    prefix: "<b>",
+                    postfix: "</b>"
+                };
+                $.ajax("api/search", {
+                    cache: false,
+                    method: "GET",
+                    data: req,
+                    success: function (data) {
+                        if (data == null || typeof (data) === "undefined")
+                            alert("No content");
+
+                        if (data.success) {
+                            showResults(data.data);
+                        }
+                        else
+                            alert("Error: " + data.message)
+
+                        $("#btnSearch").removeClass("is-loading");
+                    },
+                    error: function (e) {
+                        alert("Error: " + e.statusText + " - " + e.responseText);
+                        $("#btnSearch").removeClass("is-loading");
+                    }
+                });
+
+
+            });
+
+            function showResults(items) {
+
+                var html = "";
+
+                if (items.length > 0) {
+                    for (var i = 0; i < items.length; i++) {
+                        var item = items[i];
+                        var itemHtml = '   <div class="box">' +
+                            '<article class="media">' +
+                            '<div class="media-left">' +
+                            '</div>' +
+                            '<div class="media-content">' +
+                            '<div class="content">' +
+                            '<p>' +
+                            '<a target="_blank" href="./?date=' + item.day + '">' +
+                            '<strong>' + item.day + '</strong>' +
+                            '</a>' +
+                            '<br>' +
+                            "..." + item.fragment + "..." +
+                            '</p>' +
+                            '</div>' +
+                            '</div>' +
+                            '</article>' +
+                            '</div>';
+
+                        html += itemHtml;
+                    }
+
+                }
+                else {
+                    html += "<span>No results found</span>";
+                }
+                $("#resultsContainer").html(html);
+            }
+        });
+
+    </script>
+}
