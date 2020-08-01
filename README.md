@@ -27,7 +27,6 @@ docker run \
 -e STORAGE_PATH=/data/entries \
 -e DATABASE_PATH=/data/journal.db \
 -v /your/host/path/to/store/journal/data:/data \
---user 1001 \
 drake7707/journal
 ```
 Change host port, volume mount path or docker image name as preferred.
