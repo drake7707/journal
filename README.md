@@ -13,3 +13,24 @@ A small journal application with mood tracker, tags, full text search and embed 
 ## Screenshot
 ![](https://i.imgur.com/AXqdzWK.png)
 ![](https://i.imgur.com/orZx8My.png)
+
+
+# Run with docker
+
+Build docker image
+`docker build -t journal .`
+
+Then run with
+```
+docker run \
+--name journal \
+--restart unless-stopped \
+-d \
+-p 9004:5000 \
+-e STORAGE_PATH=/data/entries \
+-e DATABASE_PATH=/data/journal.db \
+-v /your/host/path/to/store/journal/data:/data \
+--user 1001 \
+journal
+```
+Change host port, volume mount path or docker image name as preferred.
