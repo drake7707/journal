@@ -479,6 +479,9 @@ function saveDay() {
                         // do save call and check if success
                         setDirty(false);
                         setAutoSaveError(false, "");
+                        // add current day to highlight
+                        if (calendar.options.highlightedDates.indexOf(currentDate) == -1)
+                            calendar.options.highlightedDates.push(currentDate);
                     }
                     else {
                         // revert increment of version
