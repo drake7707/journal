@@ -17,10 +17,7 @@ A small journal application with mood tracker, tags, full text search and embed 
 
 # Run with docker
 
-Build docker image
-`docker build -t journal .`
-
-Then run with
+Run with
 ```
 docker run \
 --name journal \
@@ -30,7 +27,8 @@ docker run \
 -e STORAGE_PATH=/data/entries \
 -e DATABASE_PATH=/data/journal.db \
 -v /your/host/path/to/store/journal/data:/data \
---user 1001 \
-journal
+drake7707/journal
 ```
 Change host port, volume mount path or docker image name as preferred.
+
+Docker image is built automatically through Github CI pipeline so only amd64 architecture is built and pushed automatically, if you want to run it on an ARM device (e.g. raspberry pi), you'll have to check out the code and run `docker build -t drake7707/journal .` first.
