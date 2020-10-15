@@ -29,8 +29,26 @@
 
     <script>
 
-    var dates = [ @Html.Raw(string.Join(",", Model.OrderBy(d => d.Day).Select(d => $@"[ new Date(""{d.Day}"").getTime(), {(int)d.Mood} ]"))) ];
-    Highcharts.chart('container', {
+        @{ 
+            Func<MoodEnum, string> colorFunc = (mood) =>
+            {
+                switch (mood)
+                {
+                    case MoodEnum.Joyous: return "hsl(171, 100%, 41%)";
+                    case MoodEnum.Happy: return "hsl(141, 53%, 53%)";
+                    case MoodEnum.Neutral: return "hsl(0, 0%, 71%)";
+                    case MoodEnum.Unhappy: return "hsl(348, 100%, 61%)";
+                    case MoodEnum.Terrible: return "hsl(0, 0%, 7%)";
+
+
+                    default:
+                        return "#CCC";
+                }
+            };
+        }
+
+    var dates = [ @Html.Raw(string.Join(",", Model.OrderBy(d => d.Day).Select(d => $@"{{ x: new Date(""{d.Day}"").getTime(), y: {(int)d.Mood}, color: '{colorFunc(d.Mood)}' }}"))) ];
+    var chart = Highcharts.chart('container', {
         chart: {
             type: 'line',
             zoomType: 'x'
@@ -76,8 +94,12 @@
         colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
         series: [{
             name: "Mood",
-            data: dates
+            data: dates,
+            zoneAxis: 'y',
+            zones: [ @Html.Raw(string.Join(",", Enum.GetValues(typeof(MoodEnum)).Cast<MoodEnum>().Select(m => (int)m).OrderBy(i => i).Select(i => $@"{{ value: { (i+0.5f).ToString(System.Globalization.CultureInfo.InvariantCulture) }, color: '{colorFunc((MoodEnum)i)}' }}"))) ]
         }],
+
+        
 
         responsive: {
             rules: [{
@@ -96,6 +118,9 @@
             }]
         }
     });
+
+     chart.xAxis[0].setExtremes(new Date().getTime() - 1000 * 3600 * 24 * 365, new Date().getTime());
+     chart.showResetZoom();
     </script>
 
 }
