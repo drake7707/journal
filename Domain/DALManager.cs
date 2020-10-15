@@ -111,13 +111,16 @@ namespace Journal.Domain
         {
             public string Day { get; set; }
             public string Fragment { get; set; }
+
+            public int WordCount { get; set; }
+            public int ImageCount { get; set; }
         }
         public List<SearchResult> SearchEntries(string searchString, string prefix, string postfix)
         {
             return dbManager.Query<SearchResult>(@$"
                 with x as (select id, snippet(entryContents, -1, @prefix, @postfix,'', 20) as fragment from entryContents where contents match @searchString order by rank)
 
-                select {nameof(DayEntry.Day)}, x.fragment from x
+                select {nameof(DayEntry.Day)}, x.fragment, d.wordCount, d.imageCount FROM x
                 join {nameof(DayEntry)} d on x.id = d.id
                 order by {nameof(DayEntry.Day)} desc", new { searchString = searchString, prefix = prefix, postfix = postfix })
                 .ToList();

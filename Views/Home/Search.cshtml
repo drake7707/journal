@@ -25,22 +25,22 @@
         <div class="columns">
             <div class="column" id="resultsContainer">
                 @*<div class="box">
-                    <article class="media">
-                        <div class="media-left">
-                        </div>
-                        <div class="media-content">
-                            <div class="content">
-                                <p>
-                                    <a _target="blank" href="">
-                                        <strong>2020-07-19</strong>
-                                    </a>
-                                    <br>
-                                    ...I bought a new <b>plant</b> in colruyt yesterday that I liked the look of, put it on the windowsill where...
-                                </p>
+                        <article class="media">
+                            <div class="media-left">
                             </div>
-                        </div>
-                    </article>
-                </div>*@
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <a _target="blank" href="">
+                                            <strong>2020-07-19</strong>
+                                        </a>
+                                        <br>
+                                        ...I bought a new <b>plant</b> in colruyt yesterday that I liked the look of, put it on the windowsill where...
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>*@
             </div>
         </div>
     </div>
@@ -67,7 +67,7 @@
                     $("#btnSearch").click();
                 }
             });
-        
+
 
             $("#btnSearch").click(function () {
                 if ($("#txtKeywords").val().length <= 0)
@@ -111,11 +111,31 @@
                 if (items.length > 0) {
                     for (var i = 0; i < items.length; i++) {
                         var item = items[i];
+
+                        // i totally regret not using a view for this
                         var itemHtml = '   <div class="box">' +
                             '<article class="media">' +
                             '<div class="media-left">' +
                             '</div>' +
                             '<div class="media-content">' +
+
+                            '<nav class="level">' +
+                            '<div class="level-left">' +
+                            '<div class="level-item has-text-centered">' +
+                            '<div>' +
+                            '<p class="heading">Images</p>' +
+                            '<p class="title">' + item.imageCount + '</p>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="level-item has-text-centered">' +
+                            '<div>' +
+                            '<p class="heading">Words</p>' +
+                            '<p class="title">' + item.wordCount + '</p>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+
+                            '<div class="level-item has-text-centered">' +
                             '<div class="content">' +
                             '<p>' +
                             '<a target="_blank" href="./?date=' + item.day + '">' +
@@ -125,6 +145,8 @@
                             "..." + item.fragment + "..." +
                             '</p>' +
                             '</div>' +
+                            '</div>' +
+
                             '</div>' +
                             '</article>' +
                             '</div>';

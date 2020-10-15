@@ -11,14 +11,34 @@
                         <article class="media">
                             <div class="media-left">
                             </div>
+
                             <div class="media-content">
-                                <div class="content">
-                                    <p>
-                                        <a _target="blank" href="./?date=@entry.Day">
-                                            <strong>@entry.Day</strong>
-                                        </a>
-                                    </p>
-                                </div>
+                                <nav class="level">
+                                    <div class="level-left">
+                                        <div class="level-item has-text-centered">
+                                            <div>
+                                                <p class="heading">Images</p>
+                                                <p class="title">@entry.ImageCount</p>
+                                            </div>
+                                        </div>
+                                        <div class="level-item has-text-centered">
+                                            <div>
+                                                <p class="heading">Words</p>
+                                                <p class="title">@entry.WordCount</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="level-item has-text-centered">
+                                        <div class="content">
+                                            <p>
+                                                <a _target="blank" href="./?date=@entry.Day">
+                                                    <strong>@entry.Day</strong>
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </nav>
+
                             </div>
                         </article>
                     </div>

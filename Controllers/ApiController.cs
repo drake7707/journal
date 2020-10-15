@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Journal.Domain;
@@ -57,7 +58,8 @@ namespace Journal.Controllers
                     Date = entry.Day,
                     Mood = entry.Mood,
                     Version = entry.Version,
-                    Tags = (entry.Tags + "").Split(',')
+                    Tags = (entry.Tags + "").Split(','),
+
                 };
             }
         }
@@ -97,7 +99,14 @@ namespace Journal.Controllers
             string preparedText = data.Content.Replace("<p>", "\n").Replace("</p>", "");
             mainDoc.LoadHtml(HtmlEntity.DeEntitize(preparedText));
             string cleanText = mainDoc.DocumentNode.InnerText;
-            
+
+
+            int imageCount = Regex.Matches(data.Content, @"<\s*img(.*?)\s*(?:>|/>)").Count;
+            int wordCount = !string.IsNullOrEmpty(cleanText) ? Regex.Matches(cleanText, @"\b(\w+)\b").Count : 0;
+
+            entry.ImageCount = imageCount;
+            entry.WordCount = wordCount;
+
             dalManager.SetEntry(entry, data.Content, cleanText);
 
             return Ok(new
