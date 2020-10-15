@@ -8,18 +8,21 @@ using System.Threading.Tasks;
 
 namespace Journal.Domain
 {
-    public class DALManager
+    public partial class DALManager
     {
         private readonly string entryStoragePath;
         private SqliteConnection dbManager;
 
         private string connectionString;
 
+        private DBMigrationManager migrationManager;
 
         public DALManager(string databasePath, string entryStoragePath)
         {
             connectionString = "Data Source=" + databasePath;
             Dapper.SimpleCRUD.SetDialect(SimpleCRUD.Dialect.SQLite);
+
+            
 
             if (!System.IO.File.Exists(databasePath))
             {
@@ -36,9 +39,11 @@ namespace Journal.Domain
             }
 
             this.entryStoragePath = entryStoragePath;
-
             if (!System.IO.Directory.Exists(entryStoragePath))
                 System.IO.Directory.CreateDirectory(entryStoragePath);
+
+            migrationManager = new DBMigrationManager(this, databasePath, dbManager);
+            migrationManager.CheckAndMigrate();
         }
 
         public string[] GetAllEntryDates()
@@ -141,5 +146,19 @@ namespace Journal.Domain
         }
 
 
+        public int GetCurrentDBVersion()
+        {
+            if (TableExists<DBVersion>())
+            {
+                return dbManager.Get<DBVersion>(1)?.Version ?? 1;
+            }
+            return 1;
+        }
+
+
+        private bool TableExists<T>()
+        {
+            return dbManager.QuerySingleOrDefault("SELECT name FROM sqlite_master WHERE type='table' AND name=@name", new { name = typeof(T).Name }) != null;
+        }
     }
 }

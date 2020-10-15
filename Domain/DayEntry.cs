@@ -21,5 +21,12 @@ namespace Journal.Domain
         public MoodEnum Mood { get; set; }
 
         public int Version { get; set; }
+
+
+        public int ImageCount { get; set; }
+
+        public int WordCount { get; set; }
+
+
     }
 }
