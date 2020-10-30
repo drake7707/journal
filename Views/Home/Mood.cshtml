@@ -68,20 +68,37 @@
         xAxis: {
             type: 'datetime',
             title: {
-                text: 'Date'
-            }
+                text: null
+            },
+            lineWidth: 0
         },
         yAxis: {
             title: {
-                text: 'Mood'
+                text: null
             },
+            labels: {
+                enabled: false
+            },
+            gridLineWidth: 0,
             min: -2,
-            max:2
+            max: 2
         },
         tooltip: {
-            headerFormat: '<b>{series.name}</b><br>',
-            pointFormat: '{point.x:%e. %b %Y}: {point.y:.2f}'
+
+            pointFormatter: function () {
+
+                let str = "";//"<em>" + new Date(this.x).toDateString() + "</em><br/>";
+                switch (this.y) {
+                    case -2: str += "Terrible"; break;
+                    case -1: str += "Unhappy"; break;
+                    case 0: str += "Neutral"; break;
+                    case 1: str += "Happy"; break;
+                    case 2: str += "Joyous"; break;
+                }
+                return str;
+            }
         },
+
 
         plotOptions: {
             series: {

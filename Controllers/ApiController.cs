@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -153,5 +154,19 @@ namespace Journal.Controllers
             });
         }
 
+
+        [HttpGet("year")] 
+        public IActionResult GetYear(int year)
+        {
+            var entries = dalManager.GetEntries().Where(e => e.Day.StartsWith(year.ToString("0000"))).OrderBy(e => e.Day);
+
+            //var entriesPerMonth = entries.GroupBy(e => int.Parse(e.Day.Split('-')[1])).ToDictionary(g => g.Key, g => g.ToList());
+            
+            return Ok(new
+            {
+                success = true,
+                data = entries.Select(e => new { id = e.Id, imageCount = e.ImageCount, wordCount = e.WordCount, day = e.Day, mood = e.Mood, tags = e.Tags.Split(',') }).ToList()
+            });
+        }
     }
 }

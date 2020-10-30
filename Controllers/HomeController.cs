@@ -65,6 +65,12 @@ namespace Journal.Controllers
             return View(dalManager.GetEntries());
         }
 
+        [HttpGet("year")]
+        public IActionResult Year()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         [HttpGet("error")]
         public IActionResult Error()

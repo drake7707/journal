@@ -1,0 +1,117 @@
+﻿
+@{
+    ViewData["Title"] = "Year overview";
+}
+
+<style>
+
+
+    .calendar .months-container .month-container {
+        height: 220px !important; /*fix for overlap issue */
+    }
+
+    .calendar table.month th.month-title {
+        background-color: #00d1b2;
+        font-weight: unset;
+        color: #FFF;
+    }
+
+    .calendar table.month th.day-header {
+        font-weight: 500;
+        color: #b5b5b5;
+    }
+
+    .day-content {
+        position: relative;
+    }
+
+    .calendar .month {
+        box-shadow: 0 2px 3px rgba(10,10,10,.1),0 0 0 1px rgba(10,10,10,.1);
+    }
+
+    .event-bubble {
+        background-color: rgba(0, 209, 178,0.3);
+        border-radius: 20px;
+        position: absolute;
+    }
+</style>
+
+<section class="section" style="padding-top:1em">
+    <div class="container is-fluid has-text-centered">
+        <div class="columns is-centered">
+            <div class="column">
+                <div class="calendar">
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <nav class="level">
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">Word count</p>
+                            <p class="title"><span id="totalWordCount"></span></p>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">Image count</p>
+                            <p class="title"><span id="totalImageCount"></span></p>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">Days journalled</p>
+                            <p class="title"><span id="daysJournalled"></span></p>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="columns is-centered">
+            <div class="column">
+                <h6 class="heading">Tags</h6>
+                <div id="tagCloud"></div>
+            </div>
+            <div class="column">
+                <h6 class="heading">Mood</h6>
+                <div id="moodChart"></div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
+
+
+    <script src="https://unpkg.com/js-year-calendar@latest/dist/js-year-calendar.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/js-year-calendar@latest/dist/js-year-calendar.min.css" />
+
+    <script>
+        @{
+            Func<MoodEnum, string> colorFunc = (mood) =>
+            {
+                switch (mood)
+                {
+                    case MoodEnum.Joyous: return "hsl(171, 100%, 41%)";
+                    case MoodEnum.Happy: return "hsl(141, 53%, 53%)";
+                    case MoodEnum.Neutral: return "hsl(0, 0%, 71%)";
+                    case MoodEnum.Unhappy: return "hsl(348, 100%, 61%)";
+                    case MoodEnum.Terrible: return "hsl(0, 0%, 7%)";
+
+
+                    default:
+                        return "#CCC";
+                }
+            };
+        }
+
+        var moodZones = [ @Html.Raw(string.Join(",", Enum.GetValues(typeof(MoodEnum)).Cast<MoodEnum>().Select(m => (int)m).OrderBy(i => i).Select(i => $@"{{ value: { (i+0.5f).ToString(System.Globalization.CultureInfo.InvariantCulture) }, color: '{colorFunc((MoodEnum)i)}' }}"))) ];
+
+    </script>
+    <script src="js/year.js"></script>
+}

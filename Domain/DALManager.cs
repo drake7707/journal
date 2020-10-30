@@ -22,7 +22,8 @@ namespace Journal.Domain
             connectionString = "Data Source=" + databasePath;
             Dapper.SimpleCRUD.SetDialect(SimpleCRUD.Dialect.SQLite);
 
-            
+            if (!System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(databasePath)))
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(databasePath));
 
             if (!System.IO.File.Exists(databasePath))
             {
