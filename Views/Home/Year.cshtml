@@ -113,5 +113,6 @@
         var moodZones = [ @Html.Raw(string.Join(",", Enum.GetValues(typeof(MoodEnum)).Cast<MoodEnum>().Select(m => (int)m).OrderBy(i => i).Select(i => $@"{{ value: { (i+0.5f).ToString(System.Globalization.CultureInfo.InvariantCulture) }, color: '{colorFunc((MoodEnum)i)}' }}"))) ];
 
     </script>
+    <script src="js/moodChart.js"></script>
     <script src="js/year.js"></script>
 }

@@ -153,93 +153,9 @@ namespace Year {
         });
 
 
-
-        (<any>window).Highcharts.chart('moodChart', {
-            chart: {
-                type: 'line',
-                zoomType: 'x'
-            },
-            title: {
-                text: null
-            },
-            subtitle: {
-                text: null
-            },
-            credits: {
-                enabled: false
-            },
-            legend: {
-                enabled: false
-            },
-            xAxis: {
-                type: 'datetime',
-                title: {
-                    text: null
-                },
-                lineWidth: 0
-            },
-            yAxis: {
-                title: {
-                    text: null
-                },
-                labels: {
-                    enabled: false
-                },
-                gridLineWidth: 0,
-                min: -2,
-                max: 2
-            },
-            tooltip: {
-                
-                pointFormatter: function () {
-
-                    let str = "";//"<em>" + new Date(this.x).toDateString() + "</em><br/>";
-                    switch (this.y) {
-                        case -2: str += "Terrible"; break;
-                        case -1: str += "Unhappy"; break;
-                        case 0: str += "Neutral"; break;
-                        case 1: str += "Happy"; break;
-                        case 2: str += "Joyous"; break;                  
-                    }
-                    return str;
-                }
-            },
-
-            plotOptions: {
-                series: {
-                    marker: {
-                        enabled: true
-                    }
-                }
-            },
-
-            colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
-            series: [{
-                name: "Mood",
-                data: result.data.map(r => { return { x: new Date(r.day).getTime(), y: r.mood } }),
-                zoneAxis: 'y',
-                zones: moodZones
-            }],
-
-
-
-            responsive: {
-                rules: [{
-                    condition: {
-                        maxWidth: 500
-                    },
-                    chartOptions: {
-                        plotOptions: {
-                            series: {
-                                marker: {
-                                    radius: 2.5
-                                }
-                            }
-                        }
-                    }
-                }]
-            }
-        });
+        const from = new Date(year + "-01-01");
+        const to = new Date((year+1) + "-01-01");
+        MoodChart.loadMoodChart('moodChart', result.data, from, to, moodZones);
 
     }
 

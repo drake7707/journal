@@ -25,11 +25,11 @@
 
 @section Scripts {
 
-    <script src="js/lib/highcharts.js"></script>
-
+    <script src="~/js/lib/highcharts.js"></script>
+    <script src="~/js/moodChart.js"></script>
     <script>
 
-        @{ 
+        @{
             Func<MoodEnum, string> colorFunc = (mood) =>
             {
                 switch (mood)
@@ -45,99 +45,22 @@
                         return "#CCC";
                 }
             };
+
+            var days = Model.OrderBy(d => d.Day).ToArray();
+            var minDay = days.FirstOrDefault()?.Day;
+            var maxDay = days.LastOrDefault()?.Day;
         }
 
-    var dates = [ @Html.Raw(string.Join(",", Model.OrderBy(d => d.Day).Select(d => $@"{{ x: new Date(""{d.Day}"").getTime(), y: {(int)d.Mood}, color: '{colorFunc(d.Mood)}' }}"))) ];
-    var chart = Highcharts.chart('container', {
-        chart: {
-            type: 'line',
-            zoomType: 'x'
-        },
-        title: {
-            text: null
-        },
-        subtitle: {
-            text: null
-        },
-        credits: {
-            enabled: false
-        },
-        legend: {
-            enabled: false
-        },
-        xAxis: {
-            type: 'datetime',
-            title: {
-                text: null
-            },
-            lineWidth: 0
-        },
-        yAxis: {
-            title: {
-                text: null
-            },
-            labels: {
-                enabled: false
-            },
-            gridLineWidth: 0,
-            min: -2,
-            max: 2
-        },
-        tooltip: {
+        var dates = [ @Html.Raw(string.Join(",", Model.OrderBy(d => d.Day).Select(d => $@"{{ day: ""{d.Day}"", mood: {(int)d.Mood} }}"))) ];
+        var moodZones = [ @Html.Raw(string.Join(",", Enum.GetValues(typeof(MoodEnum)).Cast<MoodEnum>().Select(m => (int)m).OrderBy(i => i).Select(i => $@"{{ value: { (i+0.5f).ToString(System.Globalization.CultureInfo.InvariantCulture) }, color: '{colorFunc((MoodEnum)i)}' }}"))) ];
 
-            pointFormatter: function () {
+        const from = new Date("@minDay");
+        const to = new Date(new Date("@maxDay").getTime() + 24*3600*1000);
 
-                let str = "";//"<em>" + new Date(this.x).toDateString() + "</em><br/>";
-                switch (this.y) {
-                    case -2: str += "Terrible"; break;
-                    case -1: str += "Unhappy"; break;
-                    case 0: str += "Neutral"; break;
-                    case 1: str += "Happy"; break;
-                    case 2: str += "Joyous"; break;
-                }
-                return str;
-            }
-        },
+        var chart = MoodChart.loadMoodChart('container', dates, from, to, moodZones);
 
-
-        plotOptions: {
-            series: {
-                marker: {
-                    enabled: true
-                }
-            }
-        },
-
-        colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
-        series: [{
-            name: "Mood",
-            data: dates,
-            zoneAxis: 'y',
-            zones: [ @Html.Raw(string.Join(",", Enum.GetValues(typeof(MoodEnum)).Cast<MoodEnum>().Select(m => (int)m).OrderBy(i => i).Select(i => $@"{{ value: { (i+0.5f).ToString(System.Globalization.CultureInfo.InvariantCulture) }, color: '{colorFunc((MoodEnum)i)}' }}"))) ]
-        }],
-
-        
-
-        responsive: {
-            rules: [{
-                condition: {
-                    maxWidth: 500
-                },
-                chartOptions: {
-                    plotOptions: {
-                        series: {
-                            marker: {
-                                radius: 2.5
-                            }
-                        }
-                    }
-                }
-            }]
-        }
-    });
-
-     chart.xAxis[0].setExtremes(new Date().getTime() - 1000 * 3600 * 24 * 365, new Date().getTime());
-     chart.showResetZoom();
+         chart.xAxis[0].setExtremes(new Date().getTime() - 1000 * 3600 * 24 * 365, new Date().getTime());
+         chart.showResetZoom();
     </script>
 
 }

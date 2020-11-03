@@ -1,9 +1,8 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -84,7 +83,7 @@ var Year;
     var maxWordCount = -1;
     function loadYear(year) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, totalWordCount, totalImageCount, daysJournalled, tagFrequency, _i, _a, r, _b, _c, t;
+            var result, totalWordCount, totalImageCount, daysJournalled, tagFrequency, _i, _a, r, _b, _c, t, from, to;
             return __generator(this, function (_d) {
                 switch (_d.label) {
                     case 0: return [4 /*yield*/, api.getYear(year)];
@@ -156,95 +155,9 @@ var Year;
                                 text: null
                             },
                         });
-                        window.Highcharts.chart('moodChart', {
-                            chart: {
-                                type: 'line',
-                                zoomType: 'x'
-                            },
-                            title: {
-                                text: null
-                            },
-                            subtitle: {
-                                text: null
-                            },
-                            credits: {
-                                enabled: false
-                            },
-                            legend: {
-                                enabled: false
-                            },
-                            xAxis: {
-                                type: 'datetime',
-                                title: {
-                                    text: null
-                                },
-                                lineWidth: 0
-                            },
-                            yAxis: {
-                                title: {
-                                    text: null
-                                },
-                                labels: {
-                                    enabled: false
-                                },
-                                gridLineWidth: 0,
-                                min: -2,
-                                max: 2
-                            },
-                            tooltip: {
-                                pointFormatter: function () {
-                                    var str = ""; //"<em>" + new Date(this.x).toDateString() + "</em><br/>";
-                                    switch (this.y) {
-                                        case -2:
-                                            str += "Terrible";
-                                            break;
-                                        case -1:
-                                            str += "Unhappy";
-                                            break;
-                                        case 0:
-                                            str += "Neutral";
-                                            break;
-                                        case 1:
-                                            str += "Happy";
-                                            break;
-                                        case 2:
-                                            str += "Joyous";
-                                            break;
-                                    }
-                                    return str;
-                                }
-                            },
-                            plotOptions: {
-                                series: {
-                                    marker: {
-                                        enabled: true
-                                    }
-                                }
-                            },
-                            colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
-                            series: [{
-                                    name: "Mood",
-                                    data: result.data.map(function (r) { return { x: new Date(r.day).getTime(), y: r.mood }; }),
-                                    zoneAxis: 'y',
-                                    zones: moodZones
-                                }],
-                            responsive: {
-                                rules: [{
-                                        condition: {
-                                            maxWidth: 500
-                                        },
-                                        chartOptions: {
-                                            plotOptions: {
-                                                series: {
-                                                    marker: {
-                                                        radius: 2.5
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }]
-                            }
-                        });
+                        from = new Date(year + "-01-01");
+                        to = new Date((year + 1) + "-01-01");
+                        MoodChart.loadMoodChart('moodChart', result.data, from, to, moodZones);
                         return [2 /*return*/];
                 }
             });
