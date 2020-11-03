@@ -105,6 +105,7 @@ namespace MoodChart {
 
             plotOptions: {
                 series: {
+                    turboThreshold: 10000,
                     marker: {
                         enabled: true
                     }
@@ -162,7 +163,6 @@ namespace MoodChart {
                         maxWidth: 500
                     },
                     chartOptions: {
-                        turboThreshold:10000,
                         plotOptions: {
                             series: {
                                 marker: {

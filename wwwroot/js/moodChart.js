@@ -100,6 +100,7 @@ var MoodChart;
             },
             plotOptions: {
                 series: {
+                    turboThreshold: 10000,
                     marker: {
                         enabled: true
                     }
@@ -133,8 +134,7 @@ var MoodChart;
                             }
                         }
                     }
-                },
-                {
+                }, {
                     type: 'spline',
                     name: 'Moving Average',
                     data: movingAverageData,
@@ -155,7 +155,6 @@ var MoodChart;
                             maxWidth: 500
                         },
                         chartOptions: {
-                            turboThreshold: 10000,
                             plotOptions: {
                                 series: {
                                     marker: {

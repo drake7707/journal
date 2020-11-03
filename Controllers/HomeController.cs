@@ -71,6 +71,14 @@ namespace Journal.Controllers
             return View();
         }
 
+        [HttpGet("gallery")]
+        public IActionResult Gallery()
+        {
+            var model = dalManager.GetEntries().Where(e => e.ImageCount > 0).OrderByDescending(e => e.Day).ToList();
+            return View(model);
+        }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         [HttpGet("error")]
         public IActionResult Error()

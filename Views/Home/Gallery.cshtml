@@ -1,0 +1,176 @@
+﻿@model List<Journal.Domain.DayEntry>
+
+@{
+    ViewData["Title"] = "Gallery";
+}
+
+
+<style>
+    .image-thumb {
+        min-width: 100px;
+        min-height: 100px;
+        background-color: #333;
+        margin: 0px;
+        cursor: pointer;
+    }
+
+    .tile.is-wrapped {
+        flex-wrap: wrap;
+    }
+
+    .image-group {
+        display: inline-block;
+    }
+</style>
+
+<section class="section" style="padding-top:1em">
+    <div class="container is-fluid has-text-centered">
+        <div class="columns is-centered">
+            <div class="column">
+                <div class="tile is-ancestor is-wrapped">
+                    @{
+                        var entriesPerMonth = Model.GroupBy(e => e.Day.Substring(0, e.Day.LastIndexOf('-'))).ToDictionary(g => g.Key, g => g.ToArray());
+                    }
+                    @foreach (var entriesOfMonth in entriesPerMonth)
+                    {
+                        var totalImageCount = entriesOfMonth.Value.Sum(e => e.ImageCount);
+                        string isClass = "";
+                        int nr = (int)Math.Ceiling(totalImageCount / 2f);
+                        if (nr > 12) nr = 12;
+                        if (nr > 1)
+                            isClass = "is-" + nr;
+
+                        <div class="tile is-parent @isClass">
+                            <div class="tile is-child box">
+                                <p class="heading">@DateTime.ParseExact(entriesOfMonth.Key, "yyyy-MM", System.Globalization.CultureInfo.InvariantCulture).ToString("MMM yyyy")</p>
+                                @foreach (var entry in entriesOfMonth.Value)
+                                {
+                                    <div class="image-group" data-day="@entry.Day">
+                                        @for (int i = 0; i < entry.ImageCount; i++)
+                                        {
+                                            <img class="image-thumb">
+                                            </img>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="modal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <!-- Any other Bulma elements you want -->
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+
+
+@section Scripts {
+
+
+    <script>
+        $(document).ready(function () {
+            var imagesGroups = $(".image-group");
+
+            for (var i = 0; i < imagesGroups.length; i++) {
+                var day = $(imagesGroups[i]).attr("data-day");
+                let idx = i;
+                fetch("api/imageThumbs?day=" + day + "&width=100&height=100&contain=false").then(resp => {
+                    resp.json().then(result => {
+                        if (result.success) {
+                            var imageThumbs = $(imagesGroups[idx]).find(".image-thumb");
+                            for (var i = 0; i < result.data.length; i++) {
+                                var galleryImg = result.data[i];
+                                $(imageThumbs[i]).attr("src", galleryImg.data);
+                                $(imageThumbs[i]).attr("data-day", galleryImg.day);
+                                $(imageThumbs[i]).attr("data-index", galleryImg.index);
+                                $(imageThumbs[i]).attr("data-embedded", galleryImg.isEmbedded);
+                                $(imageThumbs[i]).attr("data-external-source", galleryImg.externalSource);
+                                $(imageThumbs[i]).attr("title", galleryImg.caption);
+                            }
+                            //for (let galleryImg of result.data) {
+                            //$(imagesGroups[idx]).append("<img class='image-thumb tile is-child' src='" + galleryImg.data + "' data-index='" + galleryImg.index + "' data-external='" + !galleryImg.isEmbedded  + "' data-external-source='" + galleryImg.externalSource + "' />");
+                            //}
+                        }
+                    });
+                })
+            }
+
+
+            $(".modal-close").on("click", function (ev) {
+                $(this).closest(".modal").removeClass("is-active");
+            });
+
+
+            $("body").keydown(function (e) {
+                if ($("#modal").hasClass("is-active")) {
+                    if (e.keyCode == 37) { // left
+                        var cur = thumbClicked.get(0);
+                        var thumbs = $(".image-thumb");
+                        for (var i = 0; i < thumbs.length; i++) {
+                            if (thumbs[i] == cur && i - 1 >= 0) {
+                                $(thumbs[i - 1]).click();
+                                break;
+                            }
+                        }
+
+                    }
+                    else if (e.keyCode == 39) { // right
+                        var cur = thumbClicked.get(0);
+                        var thumbs = $(".image-thumb");
+                        for (var i = 0; i < thumbs.length; i++) {
+                            if (thumbs[i] == cur && i + 1 < thumbs.length) {
+                                $(thumbs[i + 1]).click();
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            });
+        });
+
+        $(document).on("click", ".modal-content img", function () {
+            $(this).closest(".modal").removeClass("is-active");
+        });
+
+        var thumbClicked = null;
+
+        $(document).on("click", ".image-thumb", function () {
+            thumbClicked = $(this);
+
+            var content = $("#modal").find(".modal-content");
+            $(content).empty();
+            if ($(this).attr("data-embedded") == "true") {
+                var index = $(this).attr("data-index");
+                var day = $(this).attr("data-day")
+                fetch("api/image?day=" + day + "&index=" + index).then(resp => {
+                    resp.json().then(result => {
+                        if (result.success) {
+                            content.append("<img src='" + result.data.data + "' />");
+                            if (result.data.caption !== "" && result.data.caption != null) {
+                                content.append("<span class='has-text-light'>" + result.data.caption + "</span>");
+                            }
+                            $("#modal").addClass("is-active");
+                        }
+                    });
+                });
+            } else {
+                var source = $(this).attr("data-external-source");
+                content.append("<img src='" + source + "' />");
+                if (typeof $(this).attr("title") !== "undefined") {
+                    content.append("<span class='has-text-light'>" + $(this).attr("title") + "</span>");
+                }
+                $("#modal").addClass("is-active");
+            }
+        });
+
+    </script>
+}
