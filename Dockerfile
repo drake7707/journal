@@ -26,6 +26,9 @@ RUN dotnet publish -c Release -o out
 
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+
+RUN apt-get update && apt-get install -y libgdiplus && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 COPY --chown=1000:1000 --from=build-env /app/out .
 
