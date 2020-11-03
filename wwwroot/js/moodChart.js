@@ -155,6 +155,7 @@ var MoodChart;
                             maxWidth: 500
                         },
                         chartOptions: {
+                            turboThreshold: 10000,
                             plotOptions: {
                                 series: {
                                     marker: {
