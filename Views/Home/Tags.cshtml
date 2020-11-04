@@ -9,8 +9,13 @@
     <div class="container is-fluid has-text-centered">
         <div class="columns is-centered">
             <div class="column">
-                <div class="field is-grouped is-grouped-multiline">
+                <div id="tagCloud"></div>
+            </div>
+        </div>
+        <div class="columns is-centered">
+            <div class="column">
 
+                <div class="field is-grouped is-grouped-multiline">
                     @foreach (var tag in Model)
                     {
                         <div class="control">
@@ -26,4 +31,18 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <script src="~/js/lib/highcharts.js"></script>
+    <script src="~/js/lib/wordcloud.js"></script>
+    <script src="~/js/tagCloudChart.js"></script>
+    <script>
+
+        var tagFrequency = {};
+        @foreach (var tag in Model)
+            @Html.Raw("tagFrequency['" + tag.Tag + "'] = " + tag.Freq + ";");
+
+        TagCloudChart.loadTagCloudChart('tagCloud', tagFrequency);
+    </script>
+}
 
