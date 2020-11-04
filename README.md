@@ -32,3 +32,15 @@ drake7707/journal
 Change host port, volume mount path or docker image name as preferred.
 
 Docker image is built automatically through Github CI pipeline so only amd64 architecture is built and pushed automatically, if you want to run it on an ARM device (e.g. raspberry pi), you'll have to check out the code and run `docker build -t drake7707/journal .` first.
+
+# Localization
+
+By default the invariant locale is used, which means that weeks start on a Sunday. This is not always the case. The application takes its locale from the server so you can define your correct locale by setting a few environment variables, for example:
+
+```
+ENV TZ=Europe/Brussels
+ENV LANG nl_BE.UTF-8
+ENV LANGUAGE ${LANG}
+ENV LC_ALL ${LANG}
+```
+(or pass them along with the -e flag in the docker run statement).
