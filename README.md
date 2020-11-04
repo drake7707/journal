@@ -35,7 +35,7 @@ Docker image is built automatically through Github CI pipeline so only amd64 arc
 
 # Localization
 
-By default the invariant locale is used, which means that weeks start ona Sunday. This is not always the case. The application takes its locale from the server so you can define your correct locale by setting a few environment variables, for example:
+By default the invariant locale is used, which means that weeks start on a Sunday. This is not always the case. The application takes its locale from the server so you can define your correct locale by setting a few environment variables, for example:
 
 ```
 ENV TZ=Europe/Brussels
