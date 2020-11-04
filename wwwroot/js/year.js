@@ -135,7 +135,7 @@ var Year;
         },
         displayWeekNumber: true,
         enableRangeSelection: false,
-        weekStart: 1,
+        weekStart: weekStart,
         yearChanged: function (ev) {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {

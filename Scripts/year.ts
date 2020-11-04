@@ -1,7 +1,6 @@
 ﻿declare var moodZones: any;
-
+declare var weekStart: number;
 namespace Year {
-
 
 
     declare class Calendar {
@@ -132,7 +131,7 @@ namespace Year {
         },
         displayWeekNumber: true,
         enableRangeSelection: false,
-        weekStart: 1,
+        weekStart: weekStart,
 
         yearChanged: async function (ev: { currentYear: number, preventRendering: boolean }) {
             await loadYear(ev.currentYear);
