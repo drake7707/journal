@@ -1,5 +1,5 @@
 ﻿declare var highlightedDates: string[];
-
+declare var weekStart: number;
 
 namespace Home {
     declare var bulmaCalendar: any;
@@ -173,7 +173,7 @@ namespace Home {
         let calendars = bulmaCalendar.attach('#cal', {
             displayMode: "inline",
             startDate: new Date(),
-            weekStart: 1,
+            weekStart: weekStart,
             showClearButton: false,
 
             // disabledDates: [ new Date(new Date().getTime()-24*3600*1000) ],
