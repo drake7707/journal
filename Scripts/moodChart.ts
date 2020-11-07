@@ -135,7 +135,7 @@ namespace MoodChart {
                     events: {
                         click: function () {
                             const dayStr = new Date(this.x).toISOString().split('T')[0];
-                            var win = window.open("/?day=" + dayStr, '_blank');
+                            var win = window.open("/?date=" + dayStr, '_blank');
                             win.focus();
                         }
                     }

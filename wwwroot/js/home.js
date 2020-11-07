@@ -183,7 +183,7 @@ var Home;
                         calendars = bulmaCalendar.attach('#cal', {
                             displayMode: "inline",
                             startDate: new Date(),
-                            weekStart: 1,
+                            weekStart: weekStart,
                             showClearButton: false,
                             // disabledDates: [ new Date(new Date().getTime()-24*3600*1000) ],
                             highlightedDates: highlightedDates.map(function (d) { return getDateFromDateString(d); })
