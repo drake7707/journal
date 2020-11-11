@@ -93,7 +93,10 @@
                                 $(imageThumbs[i]).attr("data-index", galleryImg.index);
                                 $(imageThumbs[i]).attr("data-embedded", galleryImg.isEmbedded);
                                 $(imageThumbs[i]).attr("data-external-source", galleryImg.externalSource);
-                                $(imageThumbs[i]).attr("title", galleryImg.caption);
+                                if (galleryImg.caption == null)
+                                    $(imageThumbs[i]).attr("title", galleryImg.day);
+                                else
+                                    $(imageThumbs[i]).attr("title", galleryImg.day + " • " + galleryImg.caption);
                             }
                             //for (let galleryImg of result.data) {
                             //$(imagesGroups[idx]).append("<img class='image-thumb tile is-child' src='" + galleryImg.data + "' data-index='" + galleryImg.index + "' data-external='" + !galleryImg.isEmbedded  + "' data-external-source='" + galleryImg.externalSource + "' />");
@@ -131,7 +134,9 @@
                                 break;
                             }
                         }
-
+                    }
+                    else if (e.keyCode == 27) { // escape
+                        $("#modal").removeClass("is-active");
                     }
                 }
             });
@@ -156,7 +161,9 @@
                         if (result.success) {
                             content.append("<img src='" + result.data.data + "' />");
                             if (result.data.caption !== "" && result.data.caption != null) {
-                                content.append("<span class='has-text-light'>" + result.data.caption + "</span>");
+                                content.append("<span class='has-text-light'>" + "<a class='has-text-light' href='./?date=" + day + "'>" + day + "</a>" + "&nbsp;&bull;&nbsp;" + result.data.caption + "</span>");
+                            } else {
+                                content.append("<span class='has-text-light'>" + "<a class='has-text-light' href='./?date=" + day + "'>" + day + "</a></span>");
                             }
                             $("#modal").addClass("is-active");
                         }
