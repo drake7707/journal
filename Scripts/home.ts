@@ -509,6 +509,7 @@ namespace Home {
             url.searchParams.set("date", data.date);
             window.history.replaceState({}, "", url.toString());
 
+            window.document.title = "Journal " + data.date;
             // await initEditor();
             editor.setData(data.content);
 
