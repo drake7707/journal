@@ -25,12 +25,16 @@
     .modal-content {
         width: inherit;
         min-width: 640px;
-        text-align:center;
+        text-align: center;
     }
 
         .modal-content img {
             max-height: calc(100% - 40px);
         }
+
+    .tile {
+        padding: 1rem;
+    }
 </style>
 
 <section class="section" style="padding-top:1em">
@@ -56,25 +60,25 @@
                         if (nr > 1)
                             isClass = "is-" + nr;
 
-                        <div class="tile is-parent @isClass">
-                            <div class="tile is-child box">
-                                <p class="heading">
-                                    @System.Globalization.ISOWeek.ToDateTime(entriesOfWeek.Key.Year, entriesOfWeek.Key.Item2, System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek).ToString("dd MMM yyyy")
-                                    &nbsp;-&nbsp;
-                                    @System.Globalization.ISOWeek.ToDateTime(entriesOfWeek.Key.Year, entriesOfWeek.Key.Item2, System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek).AddDays(6).ToString("dd MMM yyyy")
-                                </p>
-                                @foreach (var entry in entriesOfWeek.Value)
+                    <div class="tile is-parent @isClass">
+                        <div class="tile is-child box">
+                            <p class="heading">
+                                @System.Globalization.ISOWeek.ToDateTime(entriesOfWeek.Key.Year, entriesOfWeek.Key.Item2, System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek).ToString("dd MMM yyyy")
+                                &nbsp;-&nbsp;
+                                @System.Globalization.ISOWeek.ToDateTime(entriesOfWeek.Key.Year, entriesOfWeek.Key.Item2, System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek).AddDays(6).ToString("dd MMM yyyy")
+                            </p>
+                            @foreach (var entry in entriesOfWeek.Value)
                                 {
-                                    <div class="image-group" data-day="@entry.Day">
-                                        @for (int i = entry.ImageCount - 1; i >= 0 ; i--)
+                            <div class="image-group" data-day="@entry.Day">
+                                @for (int i = entry.ImageCount - 1; i >= 0 ; i--)
                                         {
-                                            <img class="image-thumb">
-                                            </img>
+                                <img class="image-thumb">
+                                </img>
                                         }
-                                    </div>
-                                }
                             </div>
+                                }
                         </div>
+                    </div>
                     }
                 </div>
             </div>
