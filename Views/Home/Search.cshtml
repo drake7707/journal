@@ -11,7 +11,7 @@
                 <div class="field">
                     <div class="field has-addons">
                         <div class="control is-expanded">
-                            <input id="txtKeywords" class="input" type="text" placeholder="Search in journal">
+                            <input id="txtKeywords" class="input" type="text" placeholder="Search in journal, you can use AND, OR and wildcards (*) e.g. 'Plant* OR Pot'">
                         </div>
                         <div class="control">
                             <a class="button is-primary" id="btnSearch">
@@ -19,11 +19,14 @@
                             </a>
                         </div>
                     </div>
+                    <div class="field" id="nrSearchResults">
+                        
+                    </div>
                 </div>
             </div>
         </div>
         <div class="columns">
-            <div class="column" id="resultsContainer">
+            <div class="column is-two-thirds" id="resultsContainer">
                 @*<div class="box">
                         <article class="media">
                             <div class="media-left">
@@ -42,6 +45,11 @@
                         </article>
                     </div>*@
             </div>
+            <div class="column">
+                <div id="frequencyChart">
+                    
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -50,117 +58,8 @@
 
 @section Scripts
 {
+    <script src="~/js/lib/highcharts.js"></script>
+    <script src="~/js/frequencyChart.js"></script>
+    <script src="~/js/search.js"></script>
 
-    <script>
-
-
-
-        $(document).ready(function () {
-
-
-            $("#txtKeywords").keyup(function (event) {
-                // Number 13 is the "Enter" key on the keyboard
-                if (event.keyCode === 13) {
-                    // Cancel the default action, if needed
-                    event.preventDefault();
-                    // Trigger the button element with a click
-                    $("#btnSearch").click();
-                }
-            });
-
-
-            $("#btnSearch").click(function () {
-                if ($("#txtKeywords").val().length <= 0)
-                    return;
-
-                $("#btnSearch").addClass("is-loading");
-                var req = {
-                    keywords: $("#txtKeywords").val(),
-                    prefix: "<b>",
-                    postfix: "</b>"
-                };
-                $.ajax("api/search", {
-                    cache: false,
-                    method: "GET",
-                    data: req,
-                    success: function (data) {
-                        if (data == null || typeof (data) === "undefined")
-                            alert("No content");
-
-                        if (data.success) {
-                            showResults(data.data);
-                        }
-                        else
-                            alert("Error: " + data.message)
-
-                        $("#btnSearch").removeClass("is-loading");
-                    },
-                    error: function (e) {
-                        alert("Error: " + e.statusText + " - " + e.responseText);
-                        $("#btnSearch").removeClass("is-loading");
-                    }
-                });
-
-
-            });
-
-            function showResults(items) {
-
-                var html = "";
-
-                if (items.length > 0) {
-                    for (var i = 0; i < items.length; i++) {
-                        var item = items[i];
-
-                        // i totally regret not using a view for this
-                        var itemHtml = '   <div class="box">' +
-                            '<article class="media">' +
-                            '<div class="media-left">' +
-                            '</div>' +
-                            '<div class="media-content">' +
-
-                            '<nav class="level">' +
-                            '<div class="level-left">' +
-                            '<div class="level-item has-text-centered">' +
-                            '<div>' +
-                            '<p class="heading">Words</p>' +
-                            '<p class="title">' + item.wordCount + '</p>' +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="level-item has-text-centered">' +
-                            '<div>' +
-                            '<p class="heading">Images</p>' +
-                            '<p class="title">' + item.imageCount + '</p>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-
-                            '<div class="level-item has-text-centered">' +
-                            '<div class="content">' +
-                            '<p>' +
-                            '<a target="_blank" href="./?date=' + item.day + '">' +
-                            '<strong>' + item.day + '</strong>' +
-                            '</a>' +
-                            '<br>' +
-                            "..." + item.fragment + "..." +
-                            '</p>' +
-                            '</div>' +
-                            '</div>' +
-
-                            '</div>' +
-                            '</article>' +
-                            '</div>';
-
-                        html += itemHtml;
-                    }
-
-                }
-                else {
-                    html += "<span>No results found</span>";
-                }
-                $("#resultsContainer").html(html);
-            }
-        });
-
-    </script>
 }
