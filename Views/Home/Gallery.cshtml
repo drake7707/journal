@@ -21,6 +21,16 @@
     .image-group {
         display: inline-block;
     }
+
+    .modal-content {
+        width: inherit;
+        min-width: 640px;
+        text-align:center;
+    }
+
+        .modal-content img {
+            max-height: calc(100% - 40px);
+        }
 </style>
 
 <section class="section" style="padding-top:1em">
@@ -153,13 +163,13 @@
 
             var content = $("#modal").find(".modal-content");
             $(content).empty();
+            var day = $(this).attr("data-day");
             if ($(this).attr("data-embedded") == "true") {
                 var index = $(this).attr("data-index");
-                var day = $(this).attr("data-day")
                 fetch("api/image?day=" + day + "&index=" + index).then(resp => {
                     resp.json().then(result => {
                         if (result.success) {
-                            content.append("<img src='" + result.data.data + "' />");
+                            content.append("<img src='" + result.data.data + "' /><br/>");
                             if (result.data.caption !== "" && result.data.caption != null) {
                                 content.append("<span class='has-text-light'>" + "<a class='has-text-light' href='./?date=" + day + "'>" + day + "</a>" + "&nbsp;&bull;&nbsp;" + result.data.caption + "</span>");
                             } else {
@@ -171,9 +181,9 @@
                 });
             } else {
                 var source = $(this).attr("data-external-source");
-                content.append("<img src='" + source + "' />");
+                content.append("<img src='" + source + "' /><br/>");
                 if (typeof $(this).attr("title") !== "undefined") {
-                    content.append("<span class='has-text-light'>" + $(this).attr("title") + "</span>");
+                    content.append("<span class='has-text-light'>" + "<a class='has-text-light' href='./?date=" + day + "'>" + day + "</a>" + "</span>");
                 }
                 $("#modal").addClass("is-active");
             }
