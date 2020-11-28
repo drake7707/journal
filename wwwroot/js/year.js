@@ -1,9 +1,8 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -114,7 +113,7 @@ var Year;
                         $("#totalWordCount").text(totalWordCount);
                         $("#totalImageCount").text(totalImageCount);
                         $("#daysJournalled").text(daysJournalled);
-                        TagCloudChart.loadTagCloudChart('tagCloud', tagFrequency);
+                        TagCloudChart.loadTagCloudChart('tagCloud', tagFrequency, true);
                         from = new Date(year + "-01-01");
                         to = new Date((year + 1) + "-01-01");
                         MoodChart.loadMoodChart('moodChart', result.data, from, to, moodZones);

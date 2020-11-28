@@ -107,7 +107,7 @@ namespace Year {
         $("#totalImageCount").text(totalImageCount);
         $("#daysJournalled").text(daysJournalled);
 
-        TagCloudChart.loadTagCloudChart('tagCloud', tagFrequency);
+        TagCloudChart.loadTagCloudChart('tagCloud', tagFrequency, true);
 
         const from = new Date(year + "-01-01");
         const to = new Date((year+1) + "-01-01");

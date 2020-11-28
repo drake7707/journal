@@ -1,7 +1,7 @@
 var TagCloudChart;
 (function (TagCloudChart) {
-    function loadTagCloudChart(container, tagFrequency) {
-        var chart = Highcharts.chart('tagCloud', {
+    function loadTagCloudChart(container, tagFrequency, openInNewWindow) {
+        var chart = Highcharts.chart(container, {
             series: [{
                     type: 'wordcloud',
                     data: Object.keys(tagFrequency).map(function (t) {
@@ -15,8 +15,13 @@ var TagCloudChart;
                     point: {
                         events: {
                             click: function () {
-                                var win = window.open("/tag?tag=" + this.name, '_blank');
-                                win.focus();
+                                if (openInNewWindow) {
+                                    var win = window.open("tag?tag=" + this.name, '_blank');
+                                    win.focus();
+                                }
+                                else {
+                                    document.location.href = "tag?tag=" + this.name;
+                                }
                             }
                         }
                     }

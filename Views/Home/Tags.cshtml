@@ -42,7 +42,7 @@
         @foreach (var tag in Model)
             @Html.Raw("tagFrequency['" + tag.Tag + "'] = " + tag.Freq + ";");
 
-        TagCloudChart.loadTagCloudChart('tagCloud', tagFrequency);
+        TagCloudChart.loadTagCloudChart('tagCloud', tagFrequency, false);
     </script>
 }
 

@@ -4,8 +4,8 @@ namespace TagCloudChart {
 
 
 
-    export function loadTagCloudChart(container: string, tagFrequency: { [key: string]: number }) {
-        var chart = Highcharts.chart('tagCloud', {
+    export function loadTagCloudChart(container: string, tagFrequency: { [key: string]: number }, openInNewWindow:boolean) {
+        var chart = Highcharts.chart(container, {
             series: [{
                 type: 'wordcloud',
                 data: Object.keys(tagFrequency).map(t => {
@@ -19,8 +19,13 @@ namespace TagCloudChart {
                     point: {
                         events: {
                             click: function () {
-                                var win = window.open("/tag?tag=" + this.name, '_blank');
-                                win.focus();
+                                if (openInNewWindow) {
+                                    var win = window.open("tag?tag=" + this.name, '_blank');
+                                    win.focus();
+                                }
+                                else {
+                                    document.location.href = "tag?tag=" + this.name;
+                                }
                             }
                         }
                     }

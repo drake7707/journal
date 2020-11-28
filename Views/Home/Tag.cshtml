@@ -4,7 +4,7 @@
     <div class="container is-fluid has-text-centered">
 
         <div class="columns">
-            <div class="column">
+            <div class="column is-two-thirds">
                 @foreach (var entry in Model)
                 {
                     <div class="box">
@@ -45,7 +45,24 @@
                     </div>
                 }
             </div>
+            <div class="column">
+                <div id="frequencyChart">
+
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
+@section Scripts {
+    <script src="~/js/lib/highcharts.js"></script>
+    <script src="~/js/frequencyChart.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            var items = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.OrderBy(e => e.Day).Select(e => new { day = e.Day })));
+            FrequencyChart.loadFrequencyChart(items);
+        })
+    </script>
+}
