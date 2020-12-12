@@ -93,6 +93,16 @@ var Home;
                 });
             });
         };
+        DocumentStorageAPI.prototype.deleteDay = function (day) {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    localStorage.removeItem('entry_' + day);
+                    return [2 /*return*/, {
+                            success: true,
+                        }];
+                });
+            });
+        };
         return DocumentStorageAPI;
     }());
     var RestAPI = /** @class */ (function () {
@@ -109,6 +119,13 @@ var Home;
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     return [2 /*return*/, this.post("api/day", day)];
+                });
+            });
+        };
+        RestAPI.prototype.deleteDay = function (day) {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    return [2 /*return*/, this.post("api/day", day, "DELETE")];
                 });
             });
         };
@@ -136,13 +153,14 @@ var Home;
                 });
             });
         };
-        RestAPI.prototype.post = function (path, data) {
+        RestAPI.prototype.post = function (path, data, method) {
+            if (method === void 0) { method = "POST"; }
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     return [2 /*return*/, new Promise(function (then, reject) {
                             $.ajax(path, {
                                 cache: false,
-                                method: "POST",
+                                method: method,
                                 data: JSON.stringify(data),
                                 contentType: "application/json; charset=utf-8",
                                 success: function (data) {
@@ -247,6 +265,29 @@ var Home;
                         });
                         $("#tags").change(function () {
                             onControlChange();
+                        });
+                        $("#lnkDelete").click(function () {
+                            return __awaiter(this, void 0, void 0, function () {
+                                var result;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            if (!confirm("Are you sure?")) return [3 /*break*/, 2];
+                                            return [4 /*yield*/, api.deleteDay(currentDate)];
+                                        case 1:
+                                            result = _a.sent();
+                                            if (result.success) {
+                                                isDirty = false;
+                                                document.location.reload(true);
+                                            }
+                                            else {
+                                                alert("Delete failed: " + result.message);
+                                            }
+                                            _a.label = 2;
+                                        case 2: return [2 /*return*/];
+                                    }
+                                });
+                            });
                         });
                         new BulmaTagsInput(document.getElementById("tags"), {
                             freeInput: true,

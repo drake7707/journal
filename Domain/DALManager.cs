@@ -62,6 +62,29 @@ namespace Journal.Domain
             return dbManager.QueryFirstOrDefault<DayEntry>($"SELECT * FROM {nameof(DayEntry)} WHERE {nameof(DayEntry.Day)}=@day", new { day = day });
         }
 
+        public async Task<bool> DeleteEntry(string day)
+        {
+            var entry = GetEntry(day);
+            if (entry != null)
+            {
+                bool success = await dbManager.DeleteAsync<DayEntry>(entry) > 0;
+                if (success)
+                {
+                    // clean up fts5
+                    await dbManager.ExecuteAsync("DELETE FROM entryContents WHERE Id=@id", new { id = entry.Id });
+
+                    // clean up file itself
+                    var path = GetPathForEntry(entry);
+                    if (System.IO.File.Exists(path))
+                        System.IO.File.Delete(path);
+                }
+                return success;
+            }
+            return false;
+            
+        }
+
+
         public string GetEntryContents(DayEntry entry)
         {
             return System.IO.File.ReadAllText(GetPathForEntry(entry));

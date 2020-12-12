@@ -30,9 +30,12 @@ namespace Home {
     interface API {
         getDay(day: string): Promise<GetDayReponse>;
         postDay(day: DayData): Promise<Result>;
+
+        deleteDay(day: string): Promise<Result>;
     }
 
     class DocumentStorageAPI implements API {
+       
 
         public async getDay(day: string): Promise<GetDayReponse> {
 
@@ -78,10 +81,18 @@ namespace Home {
                 success: true
             };
         }
+
+        public async deleteDay(day: string): Promise<Result> {
+            localStorage.removeItem('entry_' + day);
+            return {
+                success: true,
+            };
+        }
+
     }
 
     class RestAPI implements API {
-
+      
 
         public async getDay(day: string): Promise<GetDayReponse> {
             return this.get<GetDayReponse>("api/day", { day: day });
@@ -89,6 +100,10 @@ namespace Home {
 
         public async postDay(day: DayData): Promise<Result> {
             return this.post<Result>("api/day", day);
+        }
+
+        public async deleteDay(day: string): Promise<Result> {
+            return this.post<Result>("api/day", day, "DELETE");
         }
 
 
@@ -116,12 +131,12 @@ namespace Home {
             });
         }
 
-        private async post<T extends Result>(path: string, data?: any): Promise<T> {
+        private async post<T extends Result>(path: string, data?: any, method:string = "POST"): Promise<T> {
             return new Promise<T>((then, reject) => {
 
                 $.ajax(path, {
                     cache: false,
-                    method: "POST",
+                    method: method,
                     data: JSON.stringify(data),
                     contentType: "application/json; charset=utf-8",
                     success: (data: Result) => {
@@ -228,6 +243,18 @@ namespace Home {
 
         $("#tags").change(() => {
             onControlChange();
+        });
+
+        $("#lnkDelete").click(async function () {
+            if (confirm("Are you sure?")) {
+                const result = await api.deleteDay(currentDate);
+                if (result.success) {
+                    isDirty = false;
+                    document.location.reload(true);
+                } else {
+                    alert("Delete failed: " + result.message);
+                }
+            }
         });
 
         new BulmaTagsInput(document.getElementById("tags"), {

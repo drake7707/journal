@@ -68,6 +68,16 @@ namespace Journal.Controllers
             }
         }
 
+        [HttpDelete("day")]
+        public IActionResult DeleteDay([FromBody] string day)
+        {
+            var result = dalManager.DeleteEntry(day);
+            return Ok(new
+            {
+                success = result
+            });
+        }
+
         [HttpPost("day")]
         public IActionResult PostDay([FromBody] DayData data)
         {
