@@ -237,7 +237,9 @@ namespace Home {
             isSaving = false;
         });
 
+
         $("input[name=optMood]").change(() => {
+            updateMoodLabelCheckState();
             onControlChange();
         });
 
@@ -256,6 +258,8 @@ namespace Home {
                 }
             }
         });
+
+        
 
         new BulmaTagsInput(document.getElementById("tags"), {
             freeInput: true,
@@ -518,6 +522,11 @@ namespace Home {
         }, 5000);
     }
 
+    function updateMoodLabelCheckState() {
+        $(".mood").attr("data-checked", "false");
+        $("input[name='optMood']:checked").parent().attr("data-checked", "true");
+    }
+
     async function setDayDataToControls(data: DayData) {
         isSettingDataToControls = true;
         try {
@@ -542,6 +551,7 @@ namespace Home {
 
             setDirty(false);
             $(`input[name=optMood][value=${data.mood}]`).prop("checked", true);
+            updateMoodLabelCheckState();
         }
         finally {
             isSettingDataToControls = false;

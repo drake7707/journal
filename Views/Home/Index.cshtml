@@ -56,7 +56,38 @@
         padding-left: 25px;
     }
 
+    .mood[data-checked='true'] {
+        box-shadow: 0 0 10px #00d1b2;
+        border-radius: 48px;
+        background-color: #00d1b2;
+    }
+    
+    .mood input {
+        display:none !important;
+    }
+    .mood {
+        background-image: url('css/mood.png');
+        width: 48px;
+        height: 48px;
+        background-size: auto 48px;
+        background-repeat: no-repeat;
 
+    }
+        .mood[data-value='-2'] {
+            background-position: 1px 1px;
+        }
+        .mood[data-value='-1'] {
+            background-position: -47px 1px;
+        }
+        .mood[data-value='0'] {
+            background-position: -95px 1px;
+        }
+        .mood[data-value='1'] {
+            background-position: -143px 1px;
+        }
+        .mood[data-value='2'] {
+            background-position: -191px 1px;
+        }
 </style>
 
 <section class="section" style="padding-top:1em">
@@ -70,25 +101,21 @@
 
                 <div class="field has-text-centered">
                     <label class="label">Mood</label>
-                    <div class="control">
-                        <label class="radio">
-                            <input type="radio" name="optMood" value="2"> Joyous
+                    <div class="control mood-selection">
+                        <label class="radio mood"  data-value="2" title="Joyous">
+                            <input type="radio" name="optMood" value="2">
                         </label>
-                        <br />
-                        <label class="radio">
-                            <input type="radio" name="optMood" value="1"> Happy
+                        <label class="radio mood"  data-value="1"  title="Happy">
+                            <input type="radio" name="optMood" value="1"> 
                         </label>
-                        <br />
-                        <label class="radio">
-                            <input type="radio" name="optMood" value="0"> Neutral
+                        <label class="radio mood"  data-value="0"  title="Neutral">
+                            <input type="radio" name="optMood" value="0"> 
                         </label>
-                        <br />
-                        <label class="radio">
-                            <input type="radio" name="optMood" value="-1"> Unhappy
+                        <label class="radio mood"  data-value="-1" title="Unhappy">
+                            <input type="radio" name="optMood" value="-1">
                         </label>
-                        <br />
-                        <label class="radio">
-                            <input type="radio" name="optMood" value="-2"> Terrible
+                        <label class="radio mood"  data-value="-2" title="Terrible">
+                            <input type="radio" name="optMood" value="-2">
                         </label>
                     </div>
                 </div>

@@ -1,10 +1,3 @@
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 var FrequencyChart;
 (function (FrequencyChart) {
     function loadFrequencyChart(items) {
@@ -12,7 +5,7 @@ var FrequencyChart;
         var to = new Date(items[0].day);
         var from = new Date(items[items.length - 1].day);
         if (to.getTime() < from.getTime()) {
-            items = __spreadArrays(items).reverse(); // make sure to take a copy
+            items = items.slice().reverse(); // make sure to take a copy
             var tmp = from;
             from = to;
             to = tmp;
