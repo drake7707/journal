@@ -9,5 +9,7 @@ namespace Journal.Models
     {
 
         public string[] AvailableDates { get; set; }
+
+        public string[] AvailableTags { get; set; }
     }
 }

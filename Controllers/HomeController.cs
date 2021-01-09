@@ -26,7 +26,8 @@ namespace Journal.Controllers
         {
             JournalModel model = new JournalModel()
             {
-                AvailableDates = dalManager.GetAllEntryDates()
+                AvailableDates = dalManager.GetAllEntryDates(),
+                AvailableTags = dalManager.GetTags().Select(t => t.Tag).ToArray()
             };
 
             return View(model);

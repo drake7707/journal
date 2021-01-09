@@ -129,6 +129,12 @@
                             }
                         </style>
                         <input type="tags" id="tags" value="" />
+                        <datalist id="null">
+                        @foreach (var tag in Model.AvailableTags)
+                        {
+                            <option value="@tag" />
+                        }
+                        </datalist>
                     </div>
                 </div>
 
