@@ -104,6 +104,7 @@ namespace Year {
         }
 
         $("#totalWordCount").text(totalWordCount);
+        $("#totalPageCount").text(Math.ceil(totalWordCount / 250));
         $("#totalImageCount").text(totalImageCount);
         $("#daysJournalled").text(daysJournalled);
 
