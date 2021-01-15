@@ -159,7 +159,7 @@ namespace Home {
 
     let editor: any = null;
 
-    let calendar: any;
+    let calendars: any[];
 
     let isSettingDataToControls: boolean = false;
     let isDirty: boolean = false;
@@ -185,47 +185,58 @@ namespace Home {
             highlightDates.push(new Date(new Date("2020-07-12").getTime()-24*3600*1000*i*2));
         }*/
 
-        let calendars = bulmaCalendar.attach('#cal', {
+        let desktopCalendars = bulmaCalendar.attach('#cal', {
             displayMode: "inline",
             startDate: new Date(),
             weekStart: weekStart,
             showClearButton: false,
-
+            dateFormat: 'YYYY-MM-DD',
             // disabledDates: [ new Date(new Date().getTime()-24*3600*1000) ],
             highlightedDates: highlightedDates.map(d => getDateFromDateString(d))
         });
+        let mobileCalendars = bulmaCalendar.attach('#calMobile', {
+            //displayMode: "inline",
+            startDate: new Date(),
+            weekStart: weekStart,
+            showClearButton: false,
+            dateFormat: 'YYYY-MM-DD',
+            // disabledDates: [ new Date(new Date().getTime()-24*3600*1000) ],
+            highlightedDates: highlightedDates.map(d => getDateFromDateString(d))
+        });
+        calendars = [desktopCalendars[0], mobileCalendars[0]];
 
         await initEditor();
 
-        calendar = calendars[0];
-        calendar.datePicker.on('select', async (date: Date) => {
-            console.log("selected");
-            if (isSettingDataToControls)
-                return;
-            if (loadedSuccessfully && isDirty) {
-                const success = await saveDay();
-                if (!success) {
-                    alert("Not saved and attempt to save failed");
-
-
-                    window.setTimeout(() => {
-                        console.log("reverting date to " + currentDate);
-                        isSettingDataToControls = true;
-                        calendar.value(getDateFromDateString(currentDate));
-                        calendar.refresh();
-                        calendar.datePicker.refresh();
-                        isSettingDataToControls = false;
-                    }, 1);
-
+        for (let calendar of calendars) {
+            calendar.datePicker.on('select', async (date: Date) => {
+                console.log("selected");
+                if (isSettingDataToControls)
                     return;
+                if (loadedSuccessfully && isDirty) {
+                    const success = await saveDay();
+                    if (!success) {
+                        alert("Not saved and attempt to save failed");
+
+
+                        window.setTimeout(() => {
+                            console.log("reverting date to " + currentDate);
+                            isSettingDataToControls = true;
+                            calendar.value(getDateFromDateString(currentDate));
+                            calendar.refresh();
+                            calendar.datePicker.refresh();
+                            isSettingDataToControls = false;
+                        }, 1);
+
+                        return;
+                    }
+
                 }
 
-            }
+                console.log("loading " + calendar.date.start);
 
-            console.log("loading " + calendar.date.start);
-
-            await loadDay(getDateString(calendar.date.start));
-        });
+                await loadDay(getDateString(calendar.date.start));
+            });
+        }
 
 
         let isSaving = false;
@@ -493,8 +504,10 @@ namespace Home {
                 setAutoSaveError(false, "");
 
                 // add current day to highlight
-                if (calendar.options.highlightedDates.indexOf(currentDate) == -1)
-                    calendar.options.highlightedDates.push(currentDate);
+                for (let calendar of calendars) {
+                    if (calendar.options.highlightedDates.indexOf(currentDate) == -1)
+                        calendar.options.highlightedDates.push(currentDate);
+                }
 
             } else {
                 // revert increment of version
@@ -530,9 +543,11 @@ namespace Home {
     async function setDayDataToControls(data: DayData) {
         isSettingDataToControls = true;
         try {
-            calendar.value(getDateFromDateString(data.date));
-            calendar.refresh();
-            calendar.datePicker.refresh();
+            for (let calendar of calendars) {
+                calendar.value(getDateFromDateString(data.date));
+                calendar.refresh();
+                calendar.datePicker.refresh();
+            }
 
 
             currentDate = data.date;

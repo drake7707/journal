@@ -28,6 +28,12 @@
         background-color: rgba(0, 209, 178,0.2);
     }
 
+    .calendar-field {
+        display: flex;
+        justify-content: center;
+    }
+    
+
     .columns {
         display: flex;
         flex-direction: row;
@@ -88,6 +94,10 @@
         .mood[data-value='2'] {
             background-position: -191px 1px;
         }
+
+    .tags-input {
+        width: 320px;
+    }
 </style>
 
 <section class="section" style="padding-top:1em">
@@ -95,26 +105,29 @@
 
         <div class="columns is-desktop is-multiline">
             <div class="column is-narrow">
-                <div class="field">
+                <div class="field is-hidden-tablet">
+                    <input id="calMobile" type="date" />
+                </div>
+                <div class="field  calendar-field is-hidden-mobile">
                     <input id="cal" type="date" />
                 </div>
 
                 <div class="field has-text-centered">
                     <label class="label">Mood</label>
                     <div class="control mood-selection">
-                        <label class="radio mood"  data-value="2" title="Joyous">
+                        <label class="radio mood" data-value="2" title="Joyous">
                             <input type="radio" name="optMood" value="2">
                         </label>
-                        <label class="radio mood"  data-value="1"  title="Happy">
-                            <input type="radio" name="optMood" value="1"> 
+                        <label class="radio mood" data-value="1" title="Happy">
+                            <input type="radio" name="optMood" value="1">
                         </label>
-                        <label class="radio mood"  data-value="0"  title="Neutral">
-                            <input type="radio" name="optMood" value="0"> 
+                        <label class="radio mood" data-value="0" title="Neutral">
+                            <input type="radio" name="optMood" value="0">
                         </label>
-                        <label class="radio mood"  data-value="-1" title="Unhappy">
+                        <label class="radio mood" data-value="-1" title="Unhappy">
                             <input type="radio" name="optMood" value="-1">
                         </label>
-                        <label class="radio mood"  data-value="-2" title="Terrible">
+                        <label class="radio mood" data-value="-2" title="Terrible">
                             <input type="radio" name="optMood" value="-2">
                         </label>
                     </div>
@@ -122,31 +135,26 @@
 
                 <div class="field has-text-centered">
                     <label class="label">Tags</label>
-                    <div class="control">
-                        <style>
-                            .tags-input {
-                                width: 320px;
-                            }
-                        </style>
+                    <div class="control" style="display:flex; justify-content:center">
                         <input type="tags" id="tags" value="" />
                         <datalist id="null">
-                        @foreach (var tag in Model.AvailableTags)
-                        {
-                            <option value="@tag" />
-                        }
+                            @foreach (var tag in Model.AvailableTags)
+                            {
+                                <option value="@tag" />
+                            }
                         </datalist>
                     </div>
                 </div>
 
                 <div class="field has-text-centered">
-                   
+
                     <div class="control">
                         <a class="is-link is-size-7" id="lnkDelete">Delete this entry</a>
                     </div>
                 </div>
 
             </div>
-            <div class="column" id="editorContainer" style="height:calc(100vh - 100px);">
+            <div class="column" id="editorContainer" style="height:calc(100vh - 100px);min-width:320px">
                 <div id="editor" style="width:100%;height:100%"></div>
             </div>
         </div>
