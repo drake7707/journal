@@ -2,6 +2,9 @@
     height: 100%;
     overflow: auto;
 }
+html {
+    overflow-x: hidden !important;
+}
 
 
 ::selection {
