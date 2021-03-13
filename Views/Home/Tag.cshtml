@@ -1,68 +1,83 @@
 ﻿@model List<Journal.Domain.DayEntry>
 
-<section class="section" style="padding-top:1em">
-    <div class="container is-fluid has-text-centered">
 
-        <div class="columns">
-            <div class="column is-two-thirds">
-                @foreach (var entry in Model)
-                {
-                    <div class="box">
-                        <article class="media">
-                            <div class="media-left">
-                            </div>
+    <style>
+        .mood {
+            scale: 0.75;
+        }
+    </style>
 
-                            <div class="media-content">
-                                <nav class="level">
-                                    <div class="level-left">
-                                        <div class="level-item has-text-centered">
-                                            <div>
-                                                <p class="heading">Words</p>
-                                                <p class="title">@entry.WordCount</p>
+    <section class="section" style="padding-top:1em">
+        <div class="container is-fluid has-text-centered">
+
+            <div class="columns">
+                <div class="column is-two-thirds">
+                    @foreach (var entry in Model)
+                    {
+                        <div class="box">
+                            <article class="media">
+                                <div class="media-left">
+                                </div>
+
+
+                                <div class="media-content">
+
+                                    <nav class="">
+                                        <div class="columns">
+                                            <div class="column is-one-third">
+                                                <div class="columns">
+                                                    <div class="column is-one-third has-text-centered">
+                                                        <div><p class="heading">Words</p><p class="is-size-5">@entry.WordCount</p></div>
+                                                    </div>
+                                                    <div class="column  is-one-third has-text-centered">
+                                                        <div><p class="heading">Images</p><p class="is-size-5">@entry.ImageCount</p></div>
+                                                    </div>
+                                                    <div class="column  is-one-third has-text-centered">
+                                                        <div>
+                                                            <p class="heading">Mood</p>
+                                                            <div style="position:relative">
+                                                                <p data-value="@((int)entry.Mood)" class="mood" style="position: absolute; left:calc(50% - 24px);top: -4px;"></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="level-item has-text-centered">
-                                            <div>
-                                                <p class="heading">Images</p>
-                                                <p class="title">@entry.ImageCount</p>
+
+                                            <div class="column has-text-centered" style="flex-shrink: 1;">
+                                                <div class="content">
+                                                    <p>
+                                                        <a _target="blank" href="./?date=@entry.Day">
+                                                            <strong>@entry.Day</strong>
+                                                        </a>
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                    </div>
-                                    <div class="level-item has-text-centered">
-                                        <div class="content">
-                                            <p>
-                                                <a _target="blank" href="./?date=@entry.Day">
-                                                    <strong>@entry.Day</strong>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </nav>
+                                    </nav>
 
-                            </div>
-                        </article>
+                                </div>
+                            </article>
+                        </div>
+                    }
+                </div>
+                <div class="column">
+                    <div id="frequencyChart">
+
                     </div>
-                }
-            </div>
-            <div class="column">
-                <div id="frequencyChart">
-
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-@section Scripts {
-    <script src="~/js/lib/highcharts.js"></script>
-    <script src="~/js/frequencyChart.js"></script>
-    <script>
+    @section Scripts {
+        <script src="~/js/lib/highcharts.js"></script>
+        <script src="~/js/frequencyChart.js"></script>
+        <script>
 
         $(document).ready(function () {
 
             var items = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.OrderBy(e => e.Day).Select(e => new { day = e.Day })));
             FrequencyChart.loadFrequencyChart(items);
         })
-    </script>
-}
+        </script>
+    }

@@ -12,7 +12,16 @@ namespace Search {
         fragment: string;
         wordCount: number;
         imageCount: number;
+        mood: MoodEnum;
     }
+    enum MoodEnum {
+        terrible = -2,
+        unhappy = -1,
+        neutral = 0,
+        happy = 1,
+        joyous = 2
+    }
+
 
     $(document).ready(function () {
 
@@ -110,19 +119,34 @@ namespace Search {
                             <article class="media">
                                 <div class="media-left"></div>
                                 <div class="media-content">
-                                    <nav class="level">
-                                        <div class="level-left">
-                                            <div class="level-item has-text-centered">
-                                                <div><p class="heading">Words</p><p class="title">${item.wordCount}</p></div>
-                                            </div>
-                                            <div class="level-item has-text-centered">
-                                                <div><p class="heading">Images</p><p class="title">${item.imageCount}</p></div>
-                                            </div>
-                                        </div>
-                                        <div class="level-item has-text-centered">
+                                    <nav class="">
+
+<div class="columns">
+    <div class="column is-one-third">
+        <div class="columns">
+              <div class="column is-one-third has-text-centered">
+                <div><p class="heading">Words</p><p class="is-size-5">${item.wordCount}</p></div>
+            </div>
+            <div class="column  is-one-third has-text-centered">
+                <div><p class="heading">Images</p><p class="is-size-5">${item.imageCount}</p></div>
+            </div>
+            <div class="column  is-one-third has-text-centered">
+                <div>
+                    <p class="heading">Mood</p>
+                    <div style="position:relative">
+                        <p data-value="${item.mood}" class="mood" style="position: absolute; left:calc(50% - 24px);top: -4px;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="column has-text-centered" style="flex-shrink: 1;">
                                             <div class="content">
                                                 <p><a target="_blank" href="./?date=${item.day}"><strong>${item.day}</strong></a><br>...${item.fragment}...</p>
                                         </div>
+</div>
+                                  
                                     </nav>
                                 </div>
                             </article>

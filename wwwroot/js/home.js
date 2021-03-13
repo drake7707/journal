@@ -1,9 +1,8 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -182,7 +181,7 @@ var Home;
         return RestAPI;
     }());
     var editor = null;
-    var calendar;
+    var calendars;
     var isSettingDataToControls = false;
     var isDirty = false;
     var loadedSuccessfully = false;
@@ -193,57 +192,73 @@ var Home;
     var api = window.location.host.indexOf("github") == -1 ? new RestAPI() : new DocumentStorageAPI();
     function run() {
         return __awaiter(this, void 0, void 0, function () {
-            var calendars, isSaving, urlParams, date;
+            var desktopCalendars, mobileCalendars, _loop_1, _i, calendars_1, calendar, isSaving, urlParams, date;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        calendars = bulmaCalendar.attach('#cal', {
+                        desktopCalendars = bulmaCalendar.attach('#cal', {
                             displayMode: "inline",
                             startDate: new Date(),
                             weekStart: weekStart,
                             showClearButton: false,
+                            dateFormat: 'YYYY-MM-DD',
                             // disabledDates: [ new Date(new Date().getTime()-24*3600*1000) ],
                             highlightedDates: highlightedDates.map(function (d) { return getDateFromDateString(d); })
                         });
+                        mobileCalendars = bulmaCalendar.attach('#calMobile', {
+                            //displayMode: "inline",
+                            startDate: new Date(),
+                            weekStart: weekStart,
+                            showClearButton: false,
+                            dateFormat: 'YYYY-MM-DD',
+                            // disabledDates: [ new Date(new Date().getTime()-24*3600*1000) ],
+                            highlightedDates: highlightedDates.map(function (d) { return getDateFromDateString(d); })
+                        });
+                        calendars = [desktopCalendars[0], mobileCalendars[0]];
                         return [4 /*yield*/, initEditor()];
                     case 1:
                         _a.sent();
-                        calendar = calendars[0];
-                        calendar.datePicker.on('select', function (date) { return __awaiter(_this, void 0, void 0, function () {
-                            var success;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        console.log("selected");
-                                        if (isSettingDataToControls)
+                        _loop_1 = function (calendar) {
+                            calendar.datePicker.on('select', function (date) { return __awaiter(_this, void 0, void 0, function () {
+                                var success;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            console.log("selected");
+                                            if (isSettingDataToControls)
+                                                return [2 /*return*/];
+                                            if (!(loadedSuccessfully && isDirty)) return [3 /*break*/, 2];
+                                            return [4 /*yield*/, saveDay()];
+                                        case 1:
+                                            success = _a.sent();
+                                            if (!success) {
+                                                alert("Not saved and attempt to save failed");
+                                                window.setTimeout(function () {
+                                                    console.log("reverting date to " + currentDate);
+                                                    isSettingDataToControls = true;
+                                                    calendar.value(getDateFromDateString(currentDate));
+                                                    calendar.refresh();
+                                                    calendar.datePicker.refresh();
+                                                    isSettingDataToControls = false;
+                                                }, 1);
+                                                return [2 /*return*/];
+                                            }
+                                            _a.label = 2;
+                                        case 2:
+                                            console.log("loading " + calendar.date.start);
+                                            return [4 /*yield*/, loadDay(getDateString(calendar.date.start))];
+                                        case 3:
+                                            _a.sent();
                                             return [2 /*return*/];
-                                        if (!(loadedSuccessfully && isDirty)) return [3 /*break*/, 2];
-                                        return [4 /*yield*/, saveDay()];
-                                    case 1:
-                                        success = _a.sent();
-                                        if (!success) {
-                                            alert("Not saved and attempt to save failed");
-                                            window.setTimeout(function () {
-                                                console.log("reverting date to " + currentDate);
-                                                isSettingDataToControls = true;
-                                                calendar.value(getDateFromDateString(currentDate));
-                                                calendar.refresh();
-                                                calendar.datePicker.refresh();
-                                                isSettingDataToControls = false;
-                                            }, 1);
-                                            return [2 /*return*/];
-                                        }
-                                        _a.label = 2;
-                                    case 2:
-                                        console.log("loading " + calendar.date.start);
-                                        return [4 /*yield*/, loadDay(getDateString(calendar.date.start))];
-                                    case 3:
-                                        _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); });
+                                    }
+                                });
+                            }); });
+                        };
+                        for (_i = 0, calendars_1 = calendars; _i < calendars_1.length; _i++) {
+                            calendar = calendars_1[_i];
+                            _loop_1(calendar);
+                        }
                         isSaving = false;
                         $("#pnlUnsaved").click(function () { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
@@ -500,7 +515,7 @@ var Home;
     }
     function saveDay() {
         return __awaiter(this, void 0, void 0, function () {
-            var dayData, data, err_2;
+            var dayData, data, _i, calendars_2, calendar, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -523,8 +538,11 @@ var Home;
                             setDirty(false);
                             setAutoSaveError(false, "");
                             // add current day to highlight
-                            if (calendar.options.highlightedDates.indexOf(currentDate) == -1)
-                                calendar.options.highlightedDates.push(currentDate);
+                            for (_i = 0, calendars_2 = calendars; _i < calendars_2.length; _i++) {
+                                calendar = calendars_2[_i];
+                                if (calendar.options.highlightedDates.indexOf(currentDate) == -1)
+                                    calendar.options.highlightedDates.push(currentDate);
+                            }
                         }
                         else {
                             // revert increment of version
@@ -564,13 +582,16 @@ var Home;
     }
     function setDayDataToControls(data) {
         return __awaiter(this, void 0, void 0, function () {
-            var url;
+            var _i, calendars_3, calendar, url;
             return __generator(this, function (_a) {
                 isSettingDataToControls = true;
                 try {
-                    calendar.value(getDateFromDateString(data.date));
-                    calendar.refresh();
-                    calendar.datePicker.refresh();
+                    for (_i = 0, calendars_3 = calendars; _i < calendars_3.length; _i++) {
+                        calendar = calendars_3[_i];
+                        calendar.value(getDateFromDateString(data.date));
+                        calendar.refresh();
+                        calendar.datePicker.refresh();
+                    }
                     currentDate = data.date;
                     currentVersion = data.version;
                     $("#tags").get(0).BulmaTagsInput().value = data.tags.join(",");

@@ -62,6 +62,7 @@ namespace FrequencyChart {
                     stacking: 'normal',
                 }
             },
+            colors: [ "#00d1b2" ],
             series: [
                 {
                     name: "Occurences over time",

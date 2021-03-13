@@ -6,6 +6,34 @@ html {
     overflow-x: hidden !important;
 }
 
+.mood {
+    background-image: url('mood.png');
+    width: 48px;
+    height: 48px;
+    background-size: auto 48px;
+    background-repeat: no-repeat;
+}
+
+    .mood[data-value='-2'] {
+        background-position: 1px 1px;
+    }
+
+    .mood[data-value='-1'] {
+        background-position: -47px 1px;
+    }
+
+    .mood[data-value='0'] {
+        background-position: -95px 1px;
+    }
+
+    .mood[data-value='1'] {
+        background-position: -143px 1px;
+    }
+
+    .mood[data-value='2'] {
+        background-position: -191px 1px;
+    }
+
 
 ::selection {
     background-color: #00d1b2;

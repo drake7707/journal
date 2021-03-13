@@ -56,7 +56,8 @@ namespace Journal.Controllers
         public IActionResult Tag(string tag)
         {
             ViewBag.Title = tag;
-            return View(dalManager.GetEntriesByTag(tag));
+            var model = dalManager.GetEntriesByTag(tag);
+            return View(model);
         }
 
 
