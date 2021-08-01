@@ -94,7 +94,11 @@
 
     <script src="~/js/lib/js-year-calendar.min.js"></script>
     <link rel="stylesheet" type="text/css" href="~/css/lib/js-year-calendar.min.css" />
-
+    <style>
+        .calendar table.month td.day .day-content {
+            border-radius:0px;
+        }
+    </style>
     <script>
         @{
             Func<MoodEnum, string> colorFunc = (mood) =>

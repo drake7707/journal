@@ -141,7 +141,7 @@ namespace Year {
                     backgroundColor: `${color}`,
                     
                 });
-                //$(el).prepend(`<div class='event-bubble' style='left:${offset};top:${offset};width:${wordCountPercStr};height:${wordCountPercStr};'></div>`);
+                $(el).prepend(`<div class='event-bubble' style='left:${offset};top:${offset};width:${wordCountPercStr};height:${wordCountPercStr};'></div>`);
             }
         },
         displayWeekNumber: true,
