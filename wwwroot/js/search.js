@@ -83,7 +83,7 @@ var Search;
                 for (var i = 0; i < items.length; i++) {
                     var item = items[i];
                     // i totally regret not using a view for this
-                    var itemHtml = "\n                        <div class=\"box\">\n                            <article class=\"media\">\n                                <div class=\"media-left\"></div>\n                                <div class=\"media-content\">\n                                    <nav class=\"\">\n\n<div class=\"columns\">\n    <div class=\"column is-one-third\">\n        <div class=\"columns\">\n              <div class=\"column is-one-third has-text-centered\">\n                <div><p class=\"heading\">Words</p><p class=\"is-size-5\">" + item.wordCount + "</p></div>\n            </div>\n            <div class=\"column  is-one-third has-text-centered\">\n                <div><p class=\"heading\">Images</p><p class=\"is-size-5\">" + item.imageCount + "</p></div>\n            </div>\n            <div class=\"column  is-one-third has-text-centered\">\n                <div>\n                    <p class=\"heading\">Mood</p>\n                    <div style=\"position:relative\">\n                        <p data-value=\"" + item.mood + "\" class=\"mood\" style=\"position: absolute; left:calc(50% - 24px);top: -4px;\"></p>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"column has-text-centered\" style=\"flex-shrink: 1;\">\n                                            <div class=\"content\">\n                                                <p><a target=\"_blank\" href=\"./?date=" + item.day + "\"><strong>" + item.day + "</strong></a><br>..." + item.fragment + "...</p>\n                                        </div>\n</div>\n                                  \n                                    </nav>\n                                </div>\n                            </article>\n                        </div>";
+                    var itemHtml = "\n                        <div class=\"box\">\n                            <article class=\"media\">\n                                <div class=\"media-left\"></div>\n                                <div class=\"media-content\" style=\"overflow:hidden\">\n                                    <nav class=\"\">\n\n<div class=\"columns\">\n    <div class=\"column is-one-third\">\n        <div class=\"columns is-mobile\">\n              <div class=\"column is-one-third has-text-centered\">\n                <div><p class=\"heading\">Words</p><p class=\"is-size-5\">" + item.wordCount + "</p></div>\n            </div>\n            <div class=\"column  is-one-third has-text-centered\">\n                <div><p class=\"heading\">Images</p><p class=\"is-size-5\">" + item.imageCount + "</p></div>\n            </div>\n            <div class=\"column  is-one-third has-text-centered\">\n                <div>\n                    <p class=\"heading\">Mood</p>\n                    <div style=\"position:relative\">\n                        <p data-value=\"" + item.mood + "\" class=\"mood\" style=\"position: absolute; left:calc(50% - 24px);top: -4px;\"></p>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"column has-text-centered\" style=\"flex-shrink: 1;\">\n                                            <div class=\"content\">\n                                                <p><a target=\"_blank\" href=\"./?date=" + item.day + "\"><strong>" + item.day + "</strong></a><br>..." + item.fragment + "...</p>\n                                        </div>\n</div>\n                                  \n                                    </nav>\n                                </div>\n                            </article>\n                        </div>";
                     html += itemHtml;
                 }
             }
@@ -91,7 +91,13 @@ var Search;
                 html += "<span>No results found</span>";
             }
             $("#resultsContainer").html(html);
-            FrequencyChart.loadFrequencyChart(items);
+            if (items.length > 0) {
+                FrequencyChart.loadFrequencyChart(items);
+                $("#frequencyChart").show();
+            }
+            else {
+                $("#frequencyChart").hide();
+            }
         }
     });
 })(Search || (Search = {}));

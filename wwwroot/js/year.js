@@ -1,8 +1,9 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -130,7 +131,30 @@ var Year;
                 var wordCountPerc = Math.max(30, ev.entry.wordCount / maxWordCount * 100);
                 var wordCountPercStr = wordCountPerc.toFixed(2) + "%";
                 var offset = ((100 - wordCountPerc) / 2).toFixed(2) + "%";
-                $(el).prepend("<div class='event-bubble' style='left:" + offset + ";top:" + offset + ";width:" + wordCountPercStr + ";height:" + wordCountPercStr + "'></div>");
+                var color = "";
+                switch (ev.entry.mood) {
+                    case MoodEnum.joyous:
+                        color = "hsla(171, 100%, 41%, 0.3)";
+                        break;
+                    case MoodEnum.happy:
+                        color = "hsla(141, 53%, 53%, 0.3)";
+                        break;
+                    case MoodEnum.neutral:
+                        color = "hsla(0, 0%, 71%, 0.3)";
+                        break;
+                    case MoodEnum.unhappy:
+                        color = "hsla(348, 100%, 61%, 0.3)";
+                        break;
+                    case MoodEnum.terrible:
+                        color = "hsla(0, 0%, 7%, 0.3)";
+                        break;
+                    default:
+                        color = "";
+                }
+                $(el).css({
+                    backgroundColor: "" + color,
+                });
+                $(el).prepend("<div class='event-bubble' style='left:" + offset + ";top:" + offset + ";width:" + wordCountPercStr + ";height:" + wordCountPercStr + ";'></div>");
             }
         },
         displayWeekNumber: true,

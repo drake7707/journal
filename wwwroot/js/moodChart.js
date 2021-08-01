@@ -134,8 +134,7 @@ var MoodChart;
                             }
                         }
                     }
-                },
-                {
+                }, {
                     type: 'spline',
                     name: 'Moving Average',
                     data: movingAverageData,
