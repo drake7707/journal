@@ -118,12 +118,12 @@ namespace Search {
                         <div class="box">
                             <article class="media">
                                 <div class="media-left"></div>
-                                <div class="media-content">
+                                <div class="media-content" style="overflow:hidden">
                                     <nav class="">
 
 <div class="columns">
     <div class="column is-one-third">
-        <div class="columns">
+        <div class="columns is-mobile">
               <div class="column is-one-third has-text-centered">
                 <div><p class="heading">Words</p><p class="is-size-5">${item.wordCount}</p></div>
             </div>
@@ -160,7 +160,13 @@ namespace Search {
             }
             $("#resultsContainer").html(html);
 
-            FrequencyChart.loadFrequencyChart(items);
+            if (items.length > 0) {
+                FrequencyChart.loadFrequencyChart(items);
+                $("#frequencyChart").show();
+            } else {
+                $("#frequencyChart").hide();
+            }
+            
         }
     });
 
