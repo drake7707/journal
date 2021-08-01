@@ -111,7 +111,7 @@ namespace Year {
         TagCloudChart.loadTagCloudChart('tagCloud', tagFrequency, true);
 
         const from = new Date(year + "-01-01");
-        const to = new Date((year+1) + "-01-01");
+        const to = new Date((year + 1) + "-01-01");
         MoodChart.loadMoodChart('moodChart', result.data, from, to, moodZones);
 
     }
@@ -127,7 +127,21 @@ namespace Year {
 
                 let offset = ((100 - wordCountPerc) / 2).toFixed(2) + "%";
 
-                $(el).prepend(`<div class='event-bubble' style='left:${offset};top:${offset};width:${wordCountPercStr};height:${wordCountPercStr}'></div>`);
+                let color: string = "";
+                switch (ev.entry.mood) {
+                    case MoodEnum.joyous: color = "hsla(171, 100%, 41%, 0.3)"; break;
+                    case MoodEnum.happy: color = "hsla(141, 53%, 53%, 0.3)"; break;
+                    case MoodEnum.neutral: color = "hsla(0, 0%, 71%, 0.3)"; break;
+                    case MoodEnum.unhappy: color = "hsla(348, 100%, 61%, 0.3)"; break;
+                    case MoodEnum.terrible: color = "hsla(0, 0%, 7%, 0.3)"; break;
+                    default:
+                        color = "";
+                }
+                $(el).css({
+                    backgroundColor: `${color}`,
+                    
+                });
+                //$(el).prepend(`<div class='event-bubble' style='left:${offset};top:${offset};width:${wordCountPercStr};height:${wordCountPercStr};'></div>`);
             }
         },
         displayWeekNumber: true,
